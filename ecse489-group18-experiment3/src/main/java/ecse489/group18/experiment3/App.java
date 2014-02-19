@@ -1,7 +1,8 @@
 package ecse489.group18.experiment3;
 
 /**
- * Hello world!
+ * @author Jean-Sebastien Dery
+ * @author Matthew McAllister
  *
  */
 public class App 
