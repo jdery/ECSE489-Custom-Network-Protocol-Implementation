@@ -19,16 +19,17 @@ public class Client {
 
 	public static void main(String[] args) {
 		Socket serverSocket;
+		App myApp;
 		
 		try {
 			serverSocket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+			myApp = new App(serverSocket);
 		} catch (Exception e) {
 			System.err.println("An error occured while trying to connect to the server.");
 			e.printStackTrace();
 			return;
 		}
 		
-		App myApp = new App(serverSocket);
 		Thread processingThread = new Thread(myApp);
 		processingThread.start();
 	}

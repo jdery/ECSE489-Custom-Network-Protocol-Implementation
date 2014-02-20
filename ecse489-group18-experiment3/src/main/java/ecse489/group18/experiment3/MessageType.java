@@ -18,4 +18,12 @@ public enum MessageType {
 	CREATE_STORE,
 	SEND_MESSAGE_TO_USER,
 	QUERY_MESSAGES;
+	
+	/**
+	 * 
+	 * @return The value of the enumerator.
+	 */
+	public int getValue() {
+		return (this.ordinal());
+	}
 }

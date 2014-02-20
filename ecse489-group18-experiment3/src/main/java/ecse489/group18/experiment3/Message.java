@@ -1,5 +1,7 @@
 package ecse489.group18.experiment3;
 
+import java.nio.ByteBuffer;
+
 /**
  * The custom protocol message.
  * 
@@ -57,5 +59,32 @@ public class Message {
 		this.subMessageType = subMessageType;
 		this.size = size;
 		this.messageData = messageData;
+	}
+
+	/**
+	 * Converts the message to a byte[].
+	 * 
+	 * @return The converted byte[].
+	 */
+	public byte[] toByteArray() {
+		byte[] messageType = ByteBuffer.allocate(4)
+				.putInt(this.messageType.getValue()).array();
+		byte[] subMessageType = ByteBuffer.allocate(4)
+				.putInt(this.subMessageType).array();
+		byte[] size = ByteBuffer.allocate(4).putInt(this.size).array();
+		byte[] messageData = this.messageData.getBytes();
+
+		byte[] arrayToBeReturned = new byte[messageType.length
+				+ subMessageType.length + size.length + messageData.length];
+		System.arraycopy(messageType, 0, arrayToBeReturned, 0,
+				messageType.length);
+		System.arraycopy(subMessageType, 0, arrayToBeReturned,
+				messageType.length, subMessageType.length);
+		System.arraycopy(size, 0, arrayToBeReturned, messageType.length
+				+ subMessageType.length, size.length);
+		System.arraycopy(messageData, 0, arrayToBeReturned, messageType.length
+				+ subMessageType.length + size.length, messageData.length);
+		
+		return (arrayToBeReturned);
 	}
 }
