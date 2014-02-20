@@ -1,0 +1,7 @@
+ECSE489-Custom-Network-Protocol-Implementation
+==============================================
+
+In order to compile this project you need to install Apache Maven by running this command:
+$ sudo apt-get install maven
+
+
