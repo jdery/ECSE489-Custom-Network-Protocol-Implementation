@@ -37,28 +37,28 @@ public class Message {
 	static public Message MessageFactory(DefaultMessages defaultMessage) {
 		switch (defaultMessage) {
 		case EXIT:
-			return (new Message(MessageType.EXIT, 0, 0, ""));
+			return (new Message(MessageType.EXIT, 0, ""));
 		case ECHO:
-			return (new Message(MessageType.ECHO, 0, 4, "ECHO"));
+			return (new Message(MessageType.ECHO, 0, "ECHO_TEAM_18"));
 		case LOGOFF:
-			return (new Message(MessageType.LOGOFF, 0, 0, ""));
+			return (new Message(MessageType.LOGOFF, 0, ""));
 		case DELETE_USER:
-			return (new Message(MessageType.DELETE_USER, 0, 0, ""));
+			return (new Message(MessageType.DELETE_USER, 0, ""));
 		case CREATE_STORE:
-			return (new Message(MessageType.CREATE_STORE, 0, 0, ""));
+			return (new Message(MessageType.CREATE_STORE, 0, ""));
 		case QUERY_MESSAGES:
-			return (new Message(MessageType.QUERY_MESSAGES, 0, 0, ""));
+			return (new Message(MessageType.QUERY_MESSAGES, 0, ""));
 		}
 
 		return (null);
 	}
 
-	public Message(MessageType messageType, int subMessageType, int size,
+	public Message(MessageType messageType, int subMessageType,
 			String messageData) {
 		this.messageType = messageType;
 		this.subMessageType = subMessageType;
-		this.size = size;
 		this.messageData = messageData;
+		this.size = messageData.length();
 	}
 
 	/**
