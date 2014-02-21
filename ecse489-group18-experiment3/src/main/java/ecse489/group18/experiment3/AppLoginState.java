@@ -24,24 +24,29 @@ public class AppLoginState extends AppState {
 	@Override
 	public void execute() {
 		try {
+			this.printHeader("Login Menu");
 			System.out.println("Enter your credentials in order to login.");
 			
-			System.out.println("Username: ");
+			System.out.print("Username: ");
 			String username = bufferedReader.readLine();
 			if (!validCredential(username)) {
 				System.err.println("You must enter a valid username!");
 			}
 			
-			System.out.println("Password: ");
+			System.out.print("Password: ");
 			String password = bufferedReader.readLine();
 			if (!validCredential(password)) {
 				System.err.println("You must enter a valid password!");
 			}
+			
+			this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
+			Message responseFromServer = this.readMessage();
+			System.out.println(responseFromServer.toString());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		this.backPointerApp.changeCurrentState(backPointerApp.loggedState);
+		//this.backPointerApp.changeCurrentState(backPointerApp.loggedState);
 	}
 	
 	/**

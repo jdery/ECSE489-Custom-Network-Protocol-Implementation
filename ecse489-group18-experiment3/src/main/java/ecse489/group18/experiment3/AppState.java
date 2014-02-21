@@ -1,6 +1,7 @@
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
@@ -37,14 +38,50 @@ public abstract class AppState {
 	 * 
 	 * @param messageToSend
 	 *            The message that will be sent.
+	 * @throws IOException
 	 */
-	protected void sendMessage(Message messageToSend) {
-		try {
-			socketOutputStream.write(messageToSend.toByteArray());
-		} catch (Exception e) {
-			System.err
-					.println("Was not able to send the message to the server.");
-			e.printStackTrace();
+	protected void sendMessage(Message messageToSend) throws IOException {
+		socketOutputStream.write(messageToSend.toByteArray());
+	}
+
+	/**
+	 * Reads a message from the InputStreamReader.
+	 * 
+	 * @throws IOException
+	 */
+	protected Message readMessage() throws Exception {
+		int messageTypeInt = socketInputStream.read();
+		MessageType messageType = MessageType.values()[messageTypeInt];
+		int subMessageType = socketInputStream.read();
+		int size = socketInputStream.read();
+		char[] messageDataChars = new char[size];
+		socketInputStream.read(messageDataChars, 0, size);
+		String messageData = new String(messageDataChars);
+		
+		return (new Message(messageType, subMessageType, messageData));
+	}
+
+	/**
+	 * Prints a header on the terminal.
+	 * 
+	 * @param header
+	 *            The header to be printed.
+	 */
+	protected void printHeader(String header) {
+		int lengthOfHeader = header.length() + 4;
+
+		System.out.print("+");
+		for (int i = 0; i < (lengthOfHeader - 2); i++) {
+			System.out.print("-");
 		}
+		System.out.println("+");
+
+		System.out.println("| " + header + " |");
+
+		System.out.print("+");
+		for (int i = 0; i < (lengthOfHeader - 2); i++) {
+			System.out.print("-");
+		}
+		System.out.println("+");
 	}
 }

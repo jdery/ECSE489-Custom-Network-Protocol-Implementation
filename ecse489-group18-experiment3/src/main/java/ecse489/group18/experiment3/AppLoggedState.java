@@ -29,6 +29,6 @@ public class AppLoggedState extends AppState {
 
 	@Override
 	public void execute() {
-		System.out.println("You are now logged in!");
+		this.printHeader("You are now logged in!");
 	}
 }

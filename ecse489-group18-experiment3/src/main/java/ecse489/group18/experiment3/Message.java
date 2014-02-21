@@ -87,4 +87,15 @@ public class Message {
 		
 		return (arrayToBeReturned);
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder content = new StringBuilder(100);
+		content.append("{MessageType=" + messageType.getValue() + "}");
+		content.append("{SubMessageType=" + subMessageType + "}");
+		content.append("{Size=" + size + "}");
+		content.append("{MessageData=" + messageData + "}");
+		
+		return (content.toString());
+	}
 }
