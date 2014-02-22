@@ -1,7 +1,6 @@
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -19,7 +18,7 @@ public class App implements Runnable {
 	private Socket serverSocket;
 
 	private AppState currentState;
-	public AppState loginState, loggedState;
+	public AppState loginState, loggedState, mainState, echoState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
 		serverSocket = new Socket(serverAddress, serverPort);
@@ -29,7 +28,9 @@ public class App implements Runnable {
 
 		loginState = new AppLoginState(this, socketInputStream, socketOutputStream, bufferedReader);
 		loggedState = new AppLoggedState(this, socketInputStream, socketOutputStream, bufferedReader);
-		currentState = loginState;
+		mainState = new AppMainState(this, socketInputStream, socketOutputStream, bufferedReader);
+		echoState = new AppEchoState(this, socketInputStream, socketOutputStream, bufferedReader);
+		currentState = mainState;
 	}
 
 	public void run() {

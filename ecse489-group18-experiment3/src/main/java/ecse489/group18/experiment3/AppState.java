@@ -50,13 +50,29 @@ public abstract class AppState {
 	 * @throws IOException
 	 */
 	protected Message readMessage() throws Exception {
-		int messageTypeInt = socketInputStream.read();
-		MessageType messageType = MessageType.values()[messageTypeInt];
-		int subMessageType = socketInputStream.read();
-		int size = socketInputStream.read();
-		char[] messageDataChars = new char[size];
-		socketInputStream.read(messageDataChars, 0, size);
-		String messageData = new String(messageDataChars);
+		
+		// FIXME: This is a quick fix but I don't think this is good.
+		while(!socketInputStream.ready()) {
+			;
+		}
+		
+		MessageType messageType;
+		int subMessageType;
+		int size;
+		String messageData;
+		
+		// FIXME: This is a quick fix but I don't think this is good.
+		do {
+		
+			int messageTypeInt = socketInputStream.read();
+			messageType = MessageType.values()[messageTypeInt];
+			subMessageType = socketInputStream.read();
+			size = socketInputStream.read();
+			char[] messageDataChars = new char[size];
+			socketInputStream.read(messageDataChars, 0, size);
+			messageData = new String(messageDataChars);
+		
+		} while(messageData.length() == 0);
 		
 		return (new Message(messageType, subMessageType, messageData));
 	}

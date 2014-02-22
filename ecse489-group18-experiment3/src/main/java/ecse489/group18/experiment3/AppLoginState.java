@@ -25,28 +25,30 @@ public class AppLoginState extends AppState {
 	public void execute() {
 		try {
 			this.printHeader("Login Menu");
-			System.out.println("Enter your credentials in order to login.");
+			System.out.println("Enter your credentials in order to login.\nEnter an empty string to go back to the main menu.");
+			//TODO: make sure that a user can quit this menu...
+			String username, password;
 			
-			System.out.print("Username: ");
-			String username = bufferedReader.readLine();
-			if (!validCredential(username)) {
-				System.err.println("You must enter a valid username!");
-			}
+			do {
+				System.out.print("Username: ");
+				username = bufferedReader.readLine();
+			} while(!validCredential(username));
 			
-			System.out.print("Password: ");
-			String password = bufferedReader.readLine();
-			if (!validCredential(password)) {
-				System.err.println("You must enter a valid password!");
-			}
+			do {
+				System.out.print("Password: ");
+				password = bufferedReader.readLine();
+			} while(!validCredential(password));
 			
 			this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
 			Message responseFromServer = this.readMessage();
-			System.out.println(responseFromServer.toString());
+			System.out.println("Response from server: " + responseFromServer.toString());
+			
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		//this.backPointerApp.changeCurrentState(backPointerApp.loggedState);
+		this.backPointerApp.changeCurrentState(backPointerApp.loggedState);
 	}
 	
 	/**
@@ -56,7 +58,9 @@ public class AppLoginState extends AppState {
 	 * @return True if valid and false otherwise.
 	 */
 	private boolean validCredential(String credential) {
-		// TODO: to be implemented.
+		if (credential == null || credential.length() == 0) {
+			return (false);
+		}
 		return (true);
 	}
 }
