@@ -60,7 +60,6 @@ public class AppLoginState extends AppState {
 			} else {
 				System.out.println("An unexpected response was received: " + responseFromServer.toString());
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -33,10 +33,11 @@ public class AppMainState extends AppState {
 	private void printMainMenu() {
 		this.printHeader("Welcome to the main menu!");
 		System.out.println("1 - Log into your account");
-		System.out.println("2 - Create a new account");
-		System.out.println("3 - Delete an account");
-		System.out.println("4 - Send echo message to server");
-		System.out.println("5 - Exit");
+		System.out.println("2 - Logout of account");
+		System.out.println("3 - Create a new account");
+		System.out.println("4 - Delete an account");
+		System.out.println("5 - Send echo message to server");
+		System.out.println("6 - Exit");
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class AppMainState extends AppState {
 			do {
 				printMainMenu();
 				userInput = bufferedReader.readLine();
-			} while (!switchState(userInput));
+			} while (!switchState(Integer.parseInt(userInput)));
 		} catch (Exception e) {
 			System.err.println("An error occured while reading your input.");
 			e.printStackTrace();
@@ -60,21 +61,18 @@ public class AppMainState extends AppState {
 	 *            The input to be considered.
 	 * @return True if it is a valid input and false otherwise.
 	 */
-	private boolean switchState(String nextState) {
-		if (nextState.equals("1")) {
+	private boolean switchState(int nextState) {
+		switch(nextState) {
+		case 1:
 			this.backPointerApp.changeCurrentState(this.backPointerApp.loginState);
-		} else if (nextState.equals("2")) {
-
-		} else if (nextState.equals("3")) {
-
-		} else if (nextState.equals("4")) {
+			break;
+		case 4:
 			this.backPointerApp.changeCurrentState(this.backPointerApp.echoState);
-		} else if (nextState.equals("5")) {
-
-		} else {
+			break;
+		default:
 			return (false);
 		}
-
+		
 		return (true);
 	}
 }
