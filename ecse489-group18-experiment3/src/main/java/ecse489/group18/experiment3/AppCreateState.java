@@ -25,16 +25,10 @@ public class AppCreateState extends AppState {
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		super(backPointerApp, socketInputStream, socketOutputStream,
 				bufferedReader);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see ecse489.group18.experiment3.AppState#execute()
-	 */
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-
+		
 	}
-
 }

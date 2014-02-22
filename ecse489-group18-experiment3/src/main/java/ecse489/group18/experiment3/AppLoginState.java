@@ -48,7 +48,7 @@ public class AppLoginState extends AppState {
 			e.printStackTrace();
 		}
 		
-		this.backPointerApp.changeCurrentState(backPointerApp.loggedState);
+		//this.backPointerApp.changeCurrentState(backPointerApp.loggedState);
 	}
 	
 	/**

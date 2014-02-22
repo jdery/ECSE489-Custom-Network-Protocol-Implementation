@@ -13,7 +13,7 @@ import java.io.OutputStream;
 public abstract class AppState {
 
 	protected App backPointerApp;
-	protected InputStreamReader socketInputStream;
+	protected InputStreamReader socketInputStreamReader;
 	protected OutputStream socketOutputStream;
 	protected BufferedReader bufferedReader;
 
@@ -23,7 +23,7 @@ public abstract class AppState {
 	public AppState(App backPointerApp, InputStreamReader socketInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		this.backPointerApp = backPointerApp;
-		this.socketInputStream = socketInputStream;
+		this.socketInputStreamReader = socketInputStream;
 		this.socketOutputStream = socketOutputStream;
 		this.bufferedReader = bufferedReader;
 	}
@@ -52,9 +52,7 @@ public abstract class AppState {
 	protected Message readMessage() throws Exception {
 		
 		// FIXME: This is a quick fix but I don't think this is good.
-		while(!socketInputStream.ready()) {
-			;
-		}
+		BufferedReader bufferedReader = new BufferedReader(socketInputStreamReader);
 		
 		MessageType messageType;
 		int subMessageType;
@@ -63,18 +61,29 @@ public abstract class AppState {
 		
 		// FIXME: This is a quick fix but I don't think this is good.
 		do {
-		
-			int messageTypeInt = socketInputStream.read();
+			
+			waitForData();
+			int messageTypeInt = socketInputStreamReader.read();
+			System.out.println("Message type=" + messageTypeInt);
 			messageType = MessageType.values()[messageTypeInt];
-			subMessageType = socketInputStream.read();
-			size = socketInputStream.read();
+			waitForData();
+			subMessageType = socketInputStreamReader.read();
+			waitForData();
+			size = socketInputStreamReader.read();
 			char[] messageDataChars = new char[size];
-			socketInputStream.read(messageDataChars, 0, size);
+			waitForData();
+			socketInputStreamReader.read(messageDataChars, 0, size);
 			messageData = new String(messageDataChars);
 		
 		} while(messageData.length() == 0);
 		
 		return (new Message(messageType, subMessageType, messageData));
+	}
+	
+	private void waitForData() throws IOException {
+		while(!socketInputStreamReader.ready()) {
+			;
+		}
 	}
 
 	/**
