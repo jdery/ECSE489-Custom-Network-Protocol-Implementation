@@ -2,8 +2,9 @@ package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * @author Jean-Sebastien Dery
@@ -13,17 +14,17 @@ import java.io.OutputStream;
 public abstract class AppState {
 
 	protected App backPointerApp;
-	protected InputStreamReader socketInputStreamReader;
+	protected InputStream socketInputStream;
 	protected OutputStream socketOutputStream;
 	protected BufferedReader bufferedReader;
 
 	/**
 	 * 
 	 */
-	public AppState(App backPointerApp, InputStreamReader socketInputStream,
+	public AppState(App backPointerApp, InputStream socketInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		this.backPointerApp = backPointerApp;
-		this.socketInputStreamReader = socketInputStream;
+		this.socketInputStream = socketInputStream;
 		this.socketOutputStream = socketOutputStream;
 		this.bufferedReader = bufferedReader;
 	}
@@ -49,48 +50,35 @@ public abstract class AppState {
 	 * 
 	 * @throws IOException
 	 */
-	protected Message readMessage() throws Exception {
-		
-		// FIXME: This is a quick fix but I don't think this is good.
-		BufferedReader bufferedReader = new BufferedReader(socketInputStreamReader);
-		
-		MessageType messageType;
-		int subMessageType;
-		int size;
-		String messageData;
-		
-		// FIXME: This is a quick fix but I don't think this is good.
-		do {
+	protected Message readMessage() throws Exception {		
+		byte[] tempInformation = new byte[4];
 			
-			waitForData();
-			int messageTypeInt = socketInputStreamReader.read();
-			System.out.println("Message type=" + messageTypeInt);
-			messageType = MessageType.values()[messageTypeInt];
-			waitForData();
-			subMessageType = socketInputStreamReader.read();
-			waitForData();
-			size = socketInputStreamReader.read();
-			char[] messageDataChars = new char[size];
-			waitForData();
-			socketInputStreamReader.read(messageDataChars, 0, size);
-			messageData = new String(messageDataChars);
-		
-		} while(messageData.length() == 0);
+		// Reads the MessageType.
+		socketInputStream.read(tempInformation);
+		int messageTypeInt = ByteBuffer.wrap(tempInformation).getInt();
+		MessageType messageType = MessageType.values()[messageTypeInt];
+			
+		// Reads the SubMessageType.
+		socketInputStream.read(tempInformation);
+		int subMessageType = ByteBuffer.wrap(tempInformation).getInt();
+			
+		// Reads the size of the message.
+		socketInputStream.read(tempInformation);
+		int size = ByteBuffer.wrap(tempInformation).getInt();
+			
+		// Reads the Message Data.
+		byte[] messageDataChars = new byte[size];
+		socketInputStream.read(messageDataChars);
+		String messageData = new String(messageDataChars);
 		
 		return (new Message(messageType, subMessageType, messageData));
-	}
-	
-	private void waitForData() throws IOException {
-		while(!socketInputStreamReader.ready()) {
-			;
-		}
 	}
 
 	/**
 	 * Prints a header on the terminal.
 	 * 
 	 * @param header
-	 *            The header to be printed.
+	 *            The header tbo be printed.
 	 */
 	protected void printHeader(String header) {
 		int lengthOfHeader = header.length() + 4;

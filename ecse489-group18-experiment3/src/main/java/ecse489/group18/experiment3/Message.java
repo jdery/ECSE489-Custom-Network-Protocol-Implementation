@@ -88,6 +88,22 @@ public class Message {
 		return (arrayToBeReturned);
 	}
 	
+	/**
+	 * 
+	 * @return The Message Type.
+	 */
+	public MessageType getMessageType() {
+		return (this.messageType);
+	}
+	
+	/**
+	 * 
+	 * @return The Sub Message Type.
+	 */
+	public int getSubMessageType() {
+		return (this.subMessageType);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder content = new StringBuilder(100);

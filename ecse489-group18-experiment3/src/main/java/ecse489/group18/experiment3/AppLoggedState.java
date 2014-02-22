@@ -4,7 +4,7 @@
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -20,7 +20,7 @@ public class AppLoggedState extends AppState {
 	 * @param bufferedReader
 	 */
 	public AppLoggedState(App backPointerApp,
-			InputStreamReader socketInputStream,
+			InputStream socketInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		super(backPointerApp, socketInputStream, socketOutputStream,
 				bufferedReader);

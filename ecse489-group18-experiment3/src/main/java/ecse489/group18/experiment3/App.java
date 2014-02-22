@@ -1,6 +1,7 @@
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -12,7 +13,7 @@ import java.net.Socket;
  */
 public class App implements Runnable {
 
-	private InputStreamReader socketInputStream;
+	private InputStream socketInputStream;
 	private OutputStream socketOutputStream;
 	private BufferedReader bufferedReader;
 	private Socket serverSocket;
@@ -22,7 +23,7 @@ public class App implements Runnable {
 
 	public App(String serverAddress, int serverPort) throws Exception {
 		serverSocket = new Socket(serverAddress, serverPort);
-		socketInputStream = new InputStreamReader(serverSocket.getInputStream());
+		socketInputStream = serverSocket.getInputStream();
 		socketOutputStream = serverSocket.getOutputStream();
 		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
