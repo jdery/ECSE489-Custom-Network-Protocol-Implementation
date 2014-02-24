@@ -48,7 +48,7 @@ public class AppMainState extends AppState {
 			do {
 				printMainMenu();
 				userInput = bufferedReader.readLine();
-			} while (!switchState(Integer.parseInt(userInput)));
+			} while (!switchState(userInput));
 		} catch (Exception e) {
 			System.err.println("An error occured while reading your input.");
 			e.printStackTrace();
@@ -62,24 +62,32 @@ public class AppMainState extends AppState {
 	 *            The input to be considered.
 	 * @return True if it is a valid input and false otherwise.
 	 */
-	private boolean switchState(int nextState) {
-		switch(nextState) {
-		case 1:
-			this.backPointerApp.changeCurrentState(this.backPointerApp.loginState);
-			break;
-		case 2:
-			this.backPointerApp.changeCurrentState(this.backPointerApp.logoutState);
-			break;
-		case 3:
-			this.backPointerApp.changeCurrentState(this.backPointerApp.createState);
-			break;
-		case 4:
-			this.backPointerApp.changeCurrentState(this.backPointerApp.echoState);
-			break;
-		case 6:
-			this.backPointerApp.changeCurrentState(this.backPointerApp.exitState);
-			break;
-		default:
+	private boolean switchState(String nextState) {
+		try {
+			int nextStateValue = Integer.parseInt(nextState);
+			
+			switch(nextStateValue) {
+			case 1:
+				this.backPointerApp.changeCurrentState(this.backPointerApp.loginState);
+				break;
+			case 2:
+				this.backPointerApp.changeCurrentState(this.backPointerApp.logoutState);
+				break;
+			case 3:
+				this.backPointerApp.changeCurrentState(this.backPointerApp.createState);
+				break;
+			case 4:
+				this.backPointerApp.changeCurrentState(this.backPointerApp.echoState);
+				break;
+			case 6:
+				this.backPointerApp.changeCurrentState(this.backPointerApp.exitState);
+				break;
+			default:
+				System.out.println("Enter a valid option!");
+				return (false);
+			}
+		} catch(NumberFormatException e) {
+			System.out.println("Enter an integer value!");
 			return (false);
 		}
 		
