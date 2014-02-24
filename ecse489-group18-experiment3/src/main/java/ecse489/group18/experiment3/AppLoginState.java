@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
  * 
  */
 public class AppLoginState extends AppState {
-	
-	private final String COMMA_REGEX = ".*[,].*";
 
 	public AppLoginState(App backPointerApp, InputStream socketInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
@@ -63,36 +61,5 @@ public class AppLoginState extends AppState {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Will validate that the credential are in the right format.
-	 * 
-	 * @param credential
-	 *            The credential (either password or username) to be validated.
-	 * @return True if valid and false otherwise.
-	 */
-	private boolean validateCredentials(String username, String password) {
-		if (!validateCredential(username) || !validateCredential(password)) {
-			return (false);
-		}
-		return (true);
-	}
-
-	/**
-	 * Validate the credentials.
-	 * 
-	 * @param credential
-	 *            The credentials to be validated.
-	 * @return True if valid and false otherwise.
-	 */
-	private boolean validateCredential(String credential) {
-		if (credential == null || credential.length() == 0) {
-			return (false);
-		}
-		if (Pattern.matches(COMMA_REGEX, credential)) {
-			return (false);
-		}
-		return (true);
 	}
 }

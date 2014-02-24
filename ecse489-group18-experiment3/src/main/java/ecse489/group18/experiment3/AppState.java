@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.regex.Pattern;
 
 /**
  * @author Jean-Sebastien Dery
@@ -12,6 +13,8 @@ import java.nio.ByteBuffer;
  * 
  */
 public abstract class AppState {
+	
+	private final String COMMA_REGEX = ".*[,].*";
 
 	protected App backPointerApp;
 	protected InputStream socketInputStream;
@@ -96,5 +99,36 @@ public abstract class AppState {
 			System.out.print("-");
 		}
 		System.out.println("+");
+	}
+	
+	/**
+	 * Will validate that the credential are in the right format.
+	 * 
+	 * @param credential
+	 *            The credential (either password or username) to be validated.
+	 * @return True if valid and false otherwise.
+	 */
+	protected boolean validateCredentials(String username, String password) {
+		if (!validateCredential(username) || !validateCredential(password)) {
+			return (false);
+		}
+		return (true);
+	}
+
+	/**
+	 * Validate the credentials.
+	 * 
+	 * @param credential
+	 *            The credentials to be validated.
+	 * @return True if valid and false otherwise.
+	 */
+	protected boolean validateCredential(String credential) {
+		if (credential == null || credential.length() == 0) {
+			return (false);
+		}
+		if (Pattern.matches(COMMA_REGEX, credential)) {
+			return (false);
+		}
+		return (true);
 	}
 }
