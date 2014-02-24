@@ -47,6 +47,8 @@ public class AppLogoutState extends AppState {
 			} else {
 				System.out.println("An unexpected response was received: " + responseFromServer.toString());
 			}
+			
+			this.pressEnterToContinue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

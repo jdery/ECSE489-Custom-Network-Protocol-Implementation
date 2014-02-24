@@ -123,6 +123,7 @@ public abstract class AppState {
 	 * @return True if valid and false otherwise.
 	 */
 	protected boolean validateCredential(String credential) {
+		//TODO: need to complete this method.
 		if (credential == null || credential.length() == 0) {
 			return (false);
 		}
@@ -130,5 +131,14 @@ public abstract class AppState {
 			return (false);
 		}
 		return (true);
+	}
+	
+	/**
+	 * Displays "Press enter to continue" and waits for a carriage return.
+	 * @throws IOException 
+	 */
+	protected void pressEnterToContinue() throws IOException {
+		System.out.println("\nPress enter to continue...");
+		bufferedReader.readLine();
 	}
 }

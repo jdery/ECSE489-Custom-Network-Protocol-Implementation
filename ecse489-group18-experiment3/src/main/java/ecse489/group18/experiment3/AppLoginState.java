@@ -1,12 +1,8 @@
-/**
- * 
- */
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.regex.Pattern;
 
 /**
  * @author Jean-Sebastien Dery
@@ -58,6 +54,8 @@ public class AppLoginState extends AppState {
 			} else {
 				System.out.println("An unexpected response was received: " + responseFromServer.toString());
 			}
+			
+			this.pressEnterToContinue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
