@@ -19,7 +19,7 @@ public class App implements Runnable {
 	private Socket serverSocket;
 
 	private AppState currentState;
-	public AppState loginState, loggedState, mainState, echoState, exitState, createState;
+	public AppState loginState, loggedState, mainState, echoState, exitState, createState, logoutState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
 		serverSocket = new Socket(serverAddress, serverPort);
@@ -33,6 +33,7 @@ public class App implements Runnable {
 		echoState = new AppEchoState(this, socketInputStream, socketOutputStream, bufferedReader);
 		exitState = new AppExitState(this, socketInputStream, socketOutputStream, bufferedReader);
 		createState = new AppCreateState(this, socketInputStream, socketOutputStream, bufferedReader);
+		logoutState = new AppLogoutState(this, socketInputStream, socketOutputStream, bufferedReader);
 		currentState = mainState;
 	}
 

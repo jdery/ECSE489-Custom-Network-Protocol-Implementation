@@ -38,6 +38,7 @@ public class AppMainState extends AppState {
 		System.out.println("4 - Delete an account");
 		System.out.println("5 - Send echo message to server");
 		System.out.println("6 - Exit");
+		System.out.print("Enter an option: ");
 	}
 
 	@Override
@@ -65,6 +66,9 @@ public class AppMainState extends AppState {
 		switch(nextState) {
 		case 1:
 			this.backPointerApp.changeCurrentState(this.backPointerApp.loginState);
+			break;
+		case 2:
+			this.backPointerApp.changeCurrentState(this.backPointerApp.logoutState);
 			break;
 		case 3:
 			this.backPointerApp.changeCurrentState(this.backPointerApp.createState);
