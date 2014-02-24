@@ -29,8 +29,8 @@ public class AppExitState extends AppState {
 		this.printHeader("Exiting the application!");
 		try {
 			this.sendMessage(Message.MessageFactory(DefaultMessages.EXIT));
-			System.out.println("The connection with the server was closed.\nPress enter to close the program...");
-			bufferedReader.readLine();
+			System.out.println("The connection with the server was closed.");
+			this.pressEnterToContinue();
 			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();

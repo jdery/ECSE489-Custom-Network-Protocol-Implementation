@@ -37,7 +37,8 @@ public class AppMainState extends AppState {
 		System.out.println("3 - Create a new account");
 		System.out.println("4 - Delete an account");
 		System.out.println("5 - Send echo message to server");
-		System.out.println("6 - Exit");
+		System.out.println("6 - Send a message to a user");
+		System.out.println("7 - Exit");
 		System.out.print("Enter an option: ");
 	}
 
@@ -76,10 +77,10 @@ public class AppMainState extends AppState {
 			case 3:
 				this.backPointerApp.changeCurrentState(this.backPointerApp.createState);
 				break;
-			case 4:
+			case 5:
 				this.backPointerApp.changeCurrentState(this.backPointerApp.echoState);
 				break;
-			case 6:
+			case 7:
 				this.backPointerApp.changeCurrentState(this.backPointerApp.exitState);
 				break;
 			default:

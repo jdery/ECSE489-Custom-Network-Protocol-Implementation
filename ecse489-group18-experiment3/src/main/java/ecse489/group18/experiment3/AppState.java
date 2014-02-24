@@ -81,7 +81,7 @@ public abstract class AppState {
 	 * Prints a header on the terminal.
 	 * 
 	 * @param header
-	 *            The header tbo be printed.
+	 *            The header to be printed.
 	 */
 	protected void printHeader(String header) {
 		int lengthOfHeader = header.length() + 4;

@@ -35,6 +35,8 @@ public class AppEchoState extends AppState {
 			this.sendMessage(Message.MessageFactory(DefaultMessages.ECHO));
 			Message responseFromServer = this.readMessage();
 			System.out.println("Response from server: " + responseFromServer.toString());
+			
+			this.pressEnterToContinue();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
