@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 /**
@@ -53,28 +54,55 @@ public abstract class AppState {
 	 * 
 	 * @throws IOException
 	 */
-	protected Message readMessage() throws Exception {		
+	protected Message readMessage() throws Exception {
 		byte[] tempInformation = new byte[4];
-			
+		
+		// This delay will leave time for the input buffer to receive the information
+		// since this method is always called after a message was sent to the server.
+		Thread.sleep(100);
+		
+		if (socketInputStream.available() == 0) {
+			return (null);
+		}
+		
 		// Reads the MessageType.
 		socketInputStream.read(tempInformation);
 		int messageTypeInt = ByteBuffer.wrap(tempInformation).getInt();
 		MessageType messageType = MessageType.values()[messageTypeInt];
-			
+		
 		// Reads the SubMessageType.
 		socketInputStream.read(tempInformation);
 		int subMessageType = ByteBuffer.wrap(tempInformation).getInt();
-			
+		
 		// Reads the size of the message.
 		socketInputStream.read(tempInformation);
 		int size = ByteBuffer.wrap(tempInformation).getInt();
-			
+		
 		// Reads the Message Data.
 		byte[] messageDataChars = new byte[size];
 		socketInputStream.read(messageDataChars);
 		String messageData = new String(messageDataChars);
 		
 		return (new Message(messageType, subMessageType, messageData));
+	}
+	
+	/**
+	 * Reads multiple messages that are stored in the input stream.
+	 * 
+	 * @return A Vector<Message> containing all the messages.
+	 * @throws Exception
+	 */
+	protected Vector<Message> readMessages() throws Exception {
+		Vector<Message> messages = new Vector<Message>(5);
+		Message currentMessage;
+		do {
+			currentMessage = this.readMessage();
+			if (currentMessage != null) {
+				messages.add(currentMessage);
+			}
+		} while(currentMessage != null);
+		
+		return (messages);
 	}
 
 	/**

@@ -3,6 +3,7 @@ package ecse489.group18.experiment3;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Vector;
 
 /**
  * @author Jean-Sebastien Dery
@@ -29,23 +30,27 @@ public class AppLogoutState extends AppState {
 			this.printHeader("Logging out the user!");
 
 			this.sendMessage(Message.MessageFactory(DefaultMessages.LOGOFF));
-			Message responseFromServer = this.readMessage();
-
-			if (responseFromServer.getMessageType() == MessageType.LOGOFF) {
-				switch(responseFromServer.getSubMessageType()) {
-				case 0:
-					System.out.println("You are not logged in anymore!");
-					break;
-				case 1:
-					System.out.println("You tried to log out without first logging in!");
-					break;
-				case 2:
-					System.out.println("You are already logged out! The session has expired!");
-					break;
+			Vector<Message> messages = this.readMessages();
+			
+			// Goes throught the potential messages received from the server.
+			// TODO: to verify, the client seams to only receive multiple messages when the
+			// logout message is issued to the server.
+			for (Message responseFromServer : messages) {
+				if (responseFromServer.getMessageType() == MessageType.LOGOFF) {
+					switch(responseFromServer.getSubMessageType()) {
+					case 0:
+						System.out.println("You are not logged in anymore!");
+						break;
+					case 1:
+						System.out.println("You tried to log out without first logging in!");
+						break;
+					case 2:
+						System.out.println("You are already logged out! The session has expired!");
+						break;
+					}
+				} else {
+					System.out.println("An unexpected response was received: " + responseFromServer.toString());
 				}
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
-			} else {
-				System.out.println("An unexpected response was received: " + responseFromServer.toString());
 			}
 			
 			this.pressEnterToContinue();

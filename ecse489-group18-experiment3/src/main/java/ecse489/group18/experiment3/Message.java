@@ -37,11 +37,12 @@ public class Message {
 	static public Message MessageFactory(DefaultMessages defaultMessage) {
 		switch (defaultMessage) {
 		case EXIT:
-			return (new Message(MessageType.EXIT, 0, ""));
+			return (new Message(MessageType.EXIT, 0, "EXIT"));
 		case ECHO:
 			return (new Message(MessageType.ECHO, 0, "ECHO_TEAM_18"));
 		case LOGOFF:
-			return (new Message(MessageType.LOGOFF, 0, ""));
+			//FIXME: this does not seem to be working without the LOGOFF text.
+			return (new Message(MessageType.LOGOFF, 0, "LOGOFF"));
 		case DELETE_USER:
 			return (new Message(MessageType.DELETE_USER, 0, ""));
 		case CREATE_STORE:
