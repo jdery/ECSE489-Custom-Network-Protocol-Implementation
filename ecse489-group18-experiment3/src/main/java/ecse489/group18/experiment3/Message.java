@@ -44,11 +44,11 @@ public class Message {
 			//FIXME: this does not seem to be working without the LOGOFF text.
 			return (new Message(MessageType.LOGOFF, 0, "LOGOFF"));
 		case DELETE_USER:
-			return (new Message(MessageType.DELETE_USER, 0, ""));
+			return (new Message(MessageType.DELETE_USER, 0, "DELETE_USER"));
 		case CREATE_STORE:
-			return (new Message(MessageType.CREATE_STORE, 0, ""));
+			return (new Message(MessageType.CREATE_STORE, 0, "CREATE_STORE"));
 		case QUERY_MESSAGES:
-			return (new Message(MessageType.QUERY_MESSAGES, 0, ""));
+			return (new Message(MessageType.QUERY_MESSAGES, 0, "QUERY_MESSAGES"));
 		}
 
 		return (null);

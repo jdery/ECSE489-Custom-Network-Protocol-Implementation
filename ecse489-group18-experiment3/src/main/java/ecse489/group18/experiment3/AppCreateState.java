@@ -20,8 +20,7 @@ public class AppCreateState extends AppState {
 	 * @param socketOutputStream
 	 * @param bufferedReader
 	 */
-	public AppCreateState(App backPointerApp,
-			InputStream socketInputStream,
+	public AppCreateState(App backPointerApp, InputStream socketInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		super(backPointerApp, socketInputStream, socketOutputStream,
 				bufferedReader);
@@ -31,43 +30,92 @@ public class AppCreateState extends AppState {
 	public void execute() {
 		try {
 			this.printHeader("Creating a new user!");
-			
+
 			String username, password;
 
 			do {
-				System.out.println("Enter valid credentials in order to create the user.");
+				System.out
+						.println("Enter valid credentials in order to create the user.");
 				System.out.print("Username: ");
 				username = bufferedReader.readLine();
 				System.out.print("Password: ");
 				password = bufferedReader.readLine();
 			} while (!validateCredentials(username, username));
 
-			this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + "," + password));
-			Message responseFromServer = this.readMessage();
-
-			if (responseFromServer.getMessageType() == MessageType.CREATE_USER) {
-				switch(responseFromServer.getSubMessageType()) {
-				case 0:
-					System.out.println("The user was successfully created!");
-					break;
-				case 1:
-					System.out.println("The user already exists!");
-					break;
-				case 2:
-					System.out.println("The user is already logged in!");
-					break;
-				case 3:
-					System.out.println("Badly formatted message!");
-					break;
-				}
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
-			} else {
-				System.out.println("An unexpected response was received: " + responseFromServer.toString());
-			}
+			this.createUserAccount(username, password);
+			this.createUserStore();
 			
+			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
 			this.pressEnterToContinue();
+
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Creates the account of a user and handles the response.
+	 * 
+	 * @param username
+	 * @param password
+	 * @throws Exception
+	 */
+	private void createUserAccount(String username, String password)
+			throws Exception {
+		// Sends the message to create the user in the database.
+		this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + ","
+				+ password));
+		Message responseFromServer = this.readMessage();
+
+		// Verify the response from the user.
+		if (responseFromServer.getMessageType() == MessageType.CREATE_USER) {
+			switch (responseFromServer.getSubMessageType()) {
+			case 0:
+				System.out.println("The user was successfully created!");
+				this.loginUser(username, password);
+				break;
+			case 1:
+				System.out.println("The user already exists!");
+				break;
+			case 2:
+				System.out.println("The user is already logged in!");
+				break;
+			case 3:
+				System.out.println("Badly formatted message!");
+				break;
+			}
+		} else {
+			System.out.println("An unexpected response was received: "
+					+ responseFromServer.toString());
+		}
+	}
+
+	/**
+	 * Creates the Store of the user.
+	 * 
+	 * @throws Exception
+	 */
+	private void createUserStore() throws Exception {
+		// Sends the message to create the user in the database.
+		this.sendMessage(Message.MessageFactory(DefaultMessages.CREATE_STORE));
+		Message responseFromServer = this.readMessage();
+
+		// Verify the response from the user.
+		if (responseFromServer.getMessageType() == MessageType.CREATE_STORE) {
+			switch (responseFromServer.getSubMessageType()) {
+			case 0:
+				System.out.println("The user store was created successfully!");
+				break;
+			case 1:
+				System.out.println("The user store already exists!");
+				break;
+			case 2:
+				System.out.println("The user is not logged in!");
+				break;
+			}
+		} else {
+			System.out.println("An unexpected response was received: "
+					+ responseFromServer.toString());
 		}
 	}
 }

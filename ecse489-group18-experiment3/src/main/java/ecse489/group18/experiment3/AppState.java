@@ -61,9 +61,9 @@ public abstract class AppState {
 		// since this method is always called after a message was sent to the server.
 		Thread.sleep(100);
 		
-		if (socketInputStream.available() == 0) {
-			return (null);
-		}
+//		if (socketInputStream.available() == 0) {
+//			return (null);
+//		}
 		
 		// Reads the MessageType.
 		socketInputStream.read(tempInformation);
@@ -168,5 +168,36 @@ public abstract class AppState {
 	protected void pressEnterToContinue() throws IOException {
 		System.out.println("\nPress enter to continue...");
 		bufferedReader.readLine();
+	}
+	
+	/**
+	 * Sends the login request and handle the response.
+	 * 
+	 * @param username
+	 * @param password
+	 * @throws Exception
+	 */
+	protected void loginUser(String username, String password) throws Exception {
+		this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
+		Message responseFromServer = this.readMessage();
+
+		if (responseFromServer.getMessageType() == MessageType.LOGIN) {
+			switch(responseFromServer.getSubMessageType()) {
+			case 0:
+				System.out.println("You were successfully authenticated!");
+				break;
+			case 1:
+				System.out.println("You are already logged in!");
+				break;
+			case 2:
+				System.out.println("Bad credentials!");
+				break;
+			case 3:
+				System.out.println("Badly formatted message!");
+				break;
+			}
+		} else {
+			System.out.println("An unexpected response was received: " + responseFromServer.toString());
+		}
 	}
 }

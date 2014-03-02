@@ -10,11 +10,11 @@ public class Client {
 	/**
 	 * The server's port number on which it will be listening.
 	 */
-	private static final int SERVER_PORT = 5000;
+	public static final int SERVER_PORT = 5000;
 	/**
 	 * The server's address.
 	 */
-	private static final String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
+	public static final String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
 
 	public static void main(String[] args) {
 		App myApp;

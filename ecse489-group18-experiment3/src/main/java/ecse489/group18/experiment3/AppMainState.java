@@ -77,6 +77,9 @@ public class AppMainState extends AppState {
 			case 3:
 				this.backPointerApp.changeCurrentState(this.backPointerApp.createState);
 				break;
+			case 4:
+				this.backPointerApp.changeCurrentState(this.backPointerApp.deleteState);
+				break;
 			case 5:
 				this.backPointerApp.changeCurrentState(this.backPointerApp.echoState);
 				break;

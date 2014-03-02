@@ -32,29 +32,9 @@ public class AppLoginState extends AppState {
 				password = bufferedReader.readLine();
 			} while (!validateCredentials(username, username));
 
-			this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
-			Message responseFromServer = this.readMessage();
-
-			if (responseFromServer.getMessageType() == MessageType.LOGIN) {
-				switch(responseFromServer.getSubMessageType()) {
-				case 0:
-					System.out.println("You were successfully authenticated!");
-					break;
-				case 1:
-					System.out.println("You are already logged in!");
-					break;
-				case 2:
-					System.out.println("Bad credentials!");
-					break;
-				case 3:
-					System.out.println("Badly formatted message!");
-					break;
-				}
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
-			} else {
-				System.out.println("An unexpected response was received: " + responseFromServer.toString());
-			}
+			this.loginUser(username, password);
 			
+			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
 			this.pressEnterToContinue();
 		} catch (Exception e) {
 			e.printStackTrace();
