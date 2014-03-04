@@ -34,8 +34,7 @@ public class AppCreateState extends AppState {
 			String username, password;
 
 			do {
-				System.out
-						.println("Enter valid credentials in order to create the user.");
+				System.out.println("Enter valid credentials in order to create the user.");
 				System.out.print("Username: ");
 				username = bufferedReader.readLine();
 				System.out.print("Password: ");

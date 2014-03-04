@@ -1,10 +1,12 @@
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * @author Jean-Sebastien Dery
@@ -17,11 +19,16 @@ public class App implements Runnable {
 	private OutputStream socketOutputStream;
 	private BufferedReader bufferedReader;
 	private Socket serverSocket;
+	private Thread pollingThread;
+	private String serverAddress;
+	private int serverPort;
 
 	private AppState currentState;
 	public AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
+		this.serverAddress = serverAddress;
+		this.serverPort = serverPort;
 		serverSocket = new Socket(serverAddress, serverPort);
 		socketInputStream = serverSocket.getInputStream();
 		socketOutputStream = serverSocket.getOutputStream();
@@ -51,5 +58,27 @@ public class App implements Runnable {
 	 */
 	public void changeCurrentState(AppState nextState) {
 		this.currentState = nextState;
+	}
+	
+	/**
+	 * Will start polling messages for the currently logged in user.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 */
+	public void startPollingMessages() throws UnknownHostException, IOException {
+		Socket serverSocket = new Socket(this.serverAddress, this.serverPort);
+		InputStream socketInputStream = serverSocket.getInputStream();
+		OutputStream socketOutputStream = serverSocket.getOutputStream();
+		
+		UserPolling userPolling = new UserPolling(socketInputStream, socketOutputStream);
+		pollingThread = new Thread(userPolling);
+		pollingThread.start();
+	}
+	
+	/**
+	 * Will stop polling messages for the current user.
+	 */
+	public void stopPollingMessages() {
+		pollingThread.interrupt();
 	}
 }

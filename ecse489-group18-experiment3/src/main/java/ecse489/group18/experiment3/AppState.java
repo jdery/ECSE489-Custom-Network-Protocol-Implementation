@@ -56,6 +56,7 @@ public abstract class AppState {
 	 */
 	protected Message readMessage() throws Exception {
 		byte[] tempInformation = new byte[4];
+		// TODO: this is not completed.
 		
 		// This delay will leave time for the input buffer to receive the information
 		// since this method is always called after a message was sent to the server.
@@ -177,7 +178,7 @@ public abstract class AppState {
 	 * @param password
 	 * @throws Exception
 	 */
-	protected void loginUser(String username, String password) throws Exception {
+	protected boolean loginUser(String username, String password) throws Exception {
 		this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
 		Message responseFromServer = this.readMessage();
 
@@ -185,7 +186,7 @@ public abstract class AppState {
 			switch(responseFromServer.getSubMessageType()) {
 			case 0:
 				System.out.println("You were successfully authenticated!");
-				break;
+				return (true);
 			case 1:
 				System.out.println("You are already logged in!");
 				break;
@@ -199,5 +200,7 @@ public abstract class AppState {
 		} else {
 			System.out.println("An unexpected response was received: " + responseFromServer.toString());
 		}
+		
+		return (false);
 	}
 }

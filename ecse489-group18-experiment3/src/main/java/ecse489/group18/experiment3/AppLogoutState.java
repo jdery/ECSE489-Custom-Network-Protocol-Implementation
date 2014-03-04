@@ -32,7 +32,7 @@ public class AppLogoutState extends AppState {
 			this.sendMessage(Message.MessageFactory(DefaultMessages.LOGOFF));
 			Vector<Message> messages = this.readMessages();
 			
-			// Goes throught the potential messages received from the server.
+			// Goes through the potential messages received from the server.
 			// TODO: to verify, the client seams to only receive multiple messages when the
 			// logout message is issued to the server.
 			for (Message responseFromServer : messages) {

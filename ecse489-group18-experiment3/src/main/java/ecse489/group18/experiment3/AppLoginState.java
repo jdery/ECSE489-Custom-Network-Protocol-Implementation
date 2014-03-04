@@ -32,7 +32,9 @@ public class AppLoginState extends AppState {
 				password = bufferedReader.readLine();
 			} while (!validateCredentials(username, username));
 
-			this.loginUser(username, password);
+			if (this.loginUser(username, password)) {
+				this.backPointerApp.startPollingMessages();
+			}
 			
 			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
 			this.pressEnterToContinue();
