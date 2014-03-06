@@ -26,7 +26,7 @@ public class App implements Runnable {
 	private AppState currentState;
 	private AppUserPollingState userPolling;
 	public AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
-	public AppState checkMessagesState;
+	public AppState appCheckMessagesState, appSendMessageState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
 		this.serverAddress = serverAddress;
@@ -43,7 +43,8 @@ public class App implements Runnable {
 		createState = new AppCreateState(this, socketInputStream, socketOutputStream, bufferedReader);
 		logoutState = new AppLogoutState(this, socketInputStream, socketOutputStream, bufferedReader);
 		deleteState = new AppDeleteState(this, socketInputStream, socketOutputStream, bufferedReader);
-		checkMessagesState = new AppCheckMessagesState(this, socketInputStream, socketOutputStream, bufferedReader);
+		appCheckMessagesState = new AppCheckMessagesState(this, socketInputStream, socketOutputStream, bufferedReader);
+		appSendMessageState = new AppSendMessageState(this, socketInputStream, socketOutputStream, bufferedReader);
 		currentState = mainState;
 	}
 
