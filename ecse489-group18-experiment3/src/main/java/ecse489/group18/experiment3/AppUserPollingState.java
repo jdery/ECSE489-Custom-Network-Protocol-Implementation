@@ -1,9 +1,9 @@
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * @author Jean-Sebastien Dery
@@ -13,6 +13,7 @@ import java.io.OutputStream;
 public class AppUserPollingState extends AppState implements Runnable {
 	
 	private final int SLEEPING_PERIOD = 1000;
+	private ArrayList<String> listOfMessages = new ArrayList<String>();
 
 	/**
 	 * @param backPointerApp
@@ -39,6 +40,33 @@ public class AppUserPollingState extends AppState implements Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * Adds a message to the list of messages.
+	 * 
+	 * @param message The message to be added.
+	 */
+	private void addMessage(String message) {
+		synchronized(this.listOfMessages) {
+			this.listOfMessages.add(message);
+		}
+	}
+	
+	/**
+	 * 
+	 * @return The list of messages received.
+	 */
+	public String getMessages() {
+		StringBuilder messagesToReturn = new StringBuilder(500);
+		
+		synchronized(this.listOfMessages) {
+			for (String message : this.listOfMessages) {
+				messagesToReturn.append(message + "\n");
+			}
+		}
+		
+		return (messagesToReturn.toString());
 	}
 
 	@Override
