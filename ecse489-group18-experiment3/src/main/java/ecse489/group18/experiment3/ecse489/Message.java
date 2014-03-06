@@ -1,4 +1,4 @@
-package ecse489.group18.experiment3;
+package ecse489.group18.experiment3.ecse489;
 
 import java.nio.ByteBuffer;
 

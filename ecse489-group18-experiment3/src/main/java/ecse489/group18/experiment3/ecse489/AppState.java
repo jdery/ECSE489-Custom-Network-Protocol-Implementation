@@ -1,4 +1,4 @@
-package ecse489.group18.experiment3;
+package ecse489.group18.experiment3.ecse489;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -186,6 +186,7 @@ public abstract class AppState {
 			switch(responseFromServer.getSubMessageType()) {
 			case 0:
 				System.out.println("You were successfully authenticated!");
+				this.backPointerApp.startPollingMessages();
 				return (true);
 			case 1:
 				System.out.println("You are already logged in!");

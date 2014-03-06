@@ -1,4 +1,4 @@
-package ecse489.group18.experiment3;
+package ecse489.group18.experiment3.ecse489;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,7 +47,11 @@ public class AppUserPollingState extends AppState implements Runnable {
 			this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
 			Message response = this.readMessage();
 			
-			
+			if (response.getSubMessageType() == 1) {
+				
+			} else {
+//				System.out.println("No new messages.");
+			}
 			
 		} catch (Exception e) {
 			System.err.println("A problem occured while polling the server for new messages.");
