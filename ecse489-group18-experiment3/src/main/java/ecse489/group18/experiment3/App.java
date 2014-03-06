@@ -70,7 +70,7 @@ public class App implements Runnable {
 		InputStream socketInputStream = serverSocket.getInputStream();
 		OutputStream socketOutputStream = serverSocket.getOutputStream();
 		
-		UserPolling userPolling = new UserPolling(socketInputStream, socketOutputStream);
+		AppUserPollingState userPolling = new AppUserPollingState(this, socketInputStream, socketOutputStream, bufferedReader);
 		pollingThread = new Thread(userPolling);
 		pollingThread.start();
 	}
