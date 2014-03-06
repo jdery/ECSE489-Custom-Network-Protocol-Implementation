@@ -1,7 +1,9 @@
-package ecse489.group18.experiment3.ecse489;
+/**
+ * 
+ */
+package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -10,7 +12,7 @@ import java.io.OutputStream;
  * @author Matthew McAllister
  * 
  */
-public class AppExitState extends AppState {
+public class AppEchoState extends AppState {
 
 	/**
 	 * @param backPointerApp
@@ -18,7 +20,8 @@ public class AppExitState extends AppState {
 	 * @param socketOutputStream
 	 * @param bufferedReader
 	 */
-	public AppExitState(App backPointerApp, InputStream socketInputStream,
+	public AppEchoState(App backPointerApp,
+			InputStream socketInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		super(backPointerApp, socketInputStream, socketOutputStream,
 				bufferedReader);
@@ -26,14 +29,18 @@ public class AppExitState extends AppState {
 
 	@Override
 	public void execute() {
-		this.printHeader("Exiting the application!");
+		this.printHeader("Echo message sent!");
+		
 		try {
-			this.sendMessage(Message.MessageFactory(DefaultMessages.EXIT));
-			System.out.println("The connection with the server was closed.");
+			this.sendMessage(Message.MessageFactory(DefaultMessages.ECHO));
+			Message responseFromServer = this.readMessage();
+			System.out.println("Response from server: " + responseFromServer.toString());
+			
 			this.pressEnterToContinue();
-			System.exit(0);
-		} catch (IOException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
 	}
 }

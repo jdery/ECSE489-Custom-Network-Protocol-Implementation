@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ecse489.group18.experiment3.ecse489;
+package ecse489.group18.experiment3;
 
 /**
  * @author Jean-Sebastien Dery
