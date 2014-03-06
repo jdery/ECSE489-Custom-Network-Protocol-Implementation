@@ -24,7 +24,9 @@ public class App implements Runnable {
 	private int serverPort;
 
 	private AppState currentState;
+	private AppUserPollingState userPolling;
 	public AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
+	public AppState checkMessagesState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
 		this.serverAddress = serverAddress;
@@ -41,6 +43,7 @@ public class App implements Runnable {
 		createState = new AppCreateState(this, socketInputStream, socketOutputStream, bufferedReader);
 		logoutState = new AppLogoutState(this, socketInputStream, socketOutputStream, bufferedReader);
 		deleteState = new AppDeleteState(this, socketInputStream, socketOutputStream, bufferedReader);
+		checkMessagesState = new AppCheckMessagesState(this, socketInputStream, socketOutputStream, bufferedReader);
 		currentState = mainState;
 	}
 
@@ -66,19 +69,33 @@ public class App implements Runnable {
 	 * @throws UnknownHostException 
 	 */
 	public void startPollingMessages() throws UnknownHostException, IOException {
+		@SuppressWarnings("resource")
 		Socket serverSocket = new Socket(this.serverAddress, this.serverPort);
 		InputStream socketInputStream = serverSocket.getInputStream();
 		OutputStream socketOutputStream = serverSocket.getOutputStream();
 		
-		AppUserPollingState userPolling = new AppUserPollingState(this, socketInputStream, socketOutputStream, bufferedReader);
-		pollingThread = new Thread(userPolling);
+		this.userPolling = new AppUserPollingState(this, socketInputStream, socketOutputStream, bufferedReader);
+		pollingThread = new Thread(this.userPolling);
 		pollingThread.start();
 	}
-	
+		
 	/**
 	 * Will stop polling messages for the current user.
 	 */
 	public void stopPollingMessages() {
 		pollingThread.interrupt();
+	}
+	
+	/**
+	 * Will get the messages from the polling thread.
+	 * 
+	 * @return The messages ready to be printed on the console.
+	 */
+	public String getMessagesFromPollingThread() {
+		if (this.userPolling == null) {
+			return (null);
+		} else {
+			return (this.userPolling.getMessages());
+		}
 	}
 }

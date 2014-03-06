@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
@@ -10,7 +13,7 @@ import java.io.OutputStream;
  * @author Matthew McAllister
  * 
  */
-public class AppExitState extends AppState {
+public class AppCheckMessagesState extends AppState {
 
 	/**
 	 * @param backPointerApp
@@ -18,21 +21,25 @@ public class AppExitState extends AppState {
 	 * @param socketOutputStream
 	 * @param bufferedReader
 	 */
-	public AppExitState(App backPointerApp, InputStream socketInputStream,
-			OutputStream socketOutputStream, BufferedReader bufferedReader) {
+	public AppCheckMessagesState(App backPointerApp,
+			InputStream socketInputStream, OutputStream socketOutputStream,
+			BufferedReader bufferedReader) {
 		super(backPointerApp, socketInputStream, socketOutputStream,
 				bufferedReader);
 	}
 
 	@Override
 	public void execute() {
-		this.printHeader("Exiting the application!");
 		try {
-			this.sendMessage(Message.MessageFactory(DefaultMessages.EXIT));
-			this.backPointerApp.stopPollingMessages();
-			System.out.println("The connection with the server was closed.");
+			this.printHeader("Messages!!!");
+			String messages = this.backPointerApp.getMessagesFromPollingThread();
+			if (messages == null) {
+				System.out.println("The polling thread is not running yet! You need to be logged in!");
+			} else {
+				System.out.println(messages);
+			}
 			this.pressEnterToContinue();
-			System.exit(0);
+			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

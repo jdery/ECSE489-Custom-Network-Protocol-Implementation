@@ -36,8 +36,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 				this.execute();
 				Thread.sleep(SLEEPING_PERIOD);
 			} catch (InterruptedException e) {
-				System.err.println("A problem occured while trying to sleep the polling thread.");
-				e.printStackTrace();
+				System.out.println("The Tread.sleep() was interrupted.");
 			}
 		}
 	}
@@ -89,7 +88,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 				String formatedMessage = "From: " + from + ". Message: " + data;
 				this.addMessage(formatedMessage);
 			} else {
-				System.out.println("No new messages.");
+//				System.out.println("No new messages.");
 			}
 			
 		} catch (Exception e) {

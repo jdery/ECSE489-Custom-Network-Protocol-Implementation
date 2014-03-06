@@ -29,6 +29,7 @@ public class AppLogoutState extends AppState {
 		try {
 			this.printHeader("Logging out the user!");
 
+			this.backPointerApp.stopPollingMessages();
 			this.sendMessage(Message.MessageFactory(DefaultMessages.LOGOFF));
 			Vector<Message> messages = this.readMessages();
 			
