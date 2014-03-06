@@ -105,6 +105,14 @@ public class Message {
 		return (this.subMessageType);
 	}
 	
+	/**
+	 * 
+	 * @return The Message Data.
+	 */
+	public String getMessageData() {
+		return (this.messageData);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder content = new StringBuilder(100);

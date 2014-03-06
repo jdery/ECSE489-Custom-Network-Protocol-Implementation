@@ -50,6 +50,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 	private void addMessage(String message) {
 		synchronized(this.listOfMessages) {
 			this.listOfMessages.add(message);
+			System.out.println("A message was added!");
 		}
 	}
 	
@@ -76,9 +77,19 @@ public class AppUserPollingState extends AppState implements Runnable {
 			Message response = this.readMessage();
 			
 			if (response.getSubMessageType() == 1) {
+				response = this.readMessage();
+				String message = response.getMessageData();
 				
+				// Finds the form part and the message part of the response.
+				int division = message.indexOf('@');
+				String from = message.substring(0, division-1);
+				String data = message.substring(division+1, message.length());
+				
+				// Creates the formatted message that will be added to the list of message.
+				String formatedMessage = "From: " + from + ". Message: " + data;
+				this.addMessage(formatedMessage);
 			} else {
-//				System.out.println("No new messages.");
+				System.out.println("No new messages.");
 			}
 			
 		} catch (Exception e) {
