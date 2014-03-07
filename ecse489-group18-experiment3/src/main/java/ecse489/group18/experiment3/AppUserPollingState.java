@@ -82,19 +82,22 @@ public class AppUserPollingState extends AppState implements Runnable {
 				responses = this.readMessages();
 			}
 			
-			if (responses.get(0).getSubMessageType() == 1) {
+			if (responses.get(0) != null && responses.get(0).getSubMessageType() == 1) {
 				System.out.println("A new message was received!");
 				
 				for (int i = 0 ; i < responses.size() ; i++) {
-					String message = responses.get(i).getMessageData();					
+					String message = responses.get(i).getMessageData();
 					
-					// Finds the form part and the message part of the response.
-					int division = message.indexOf('@');
-					String from = message.substring(0, division-1);
-					String data = message.substring(division+1, message.length());
+//					System.out.println(message);
 					
-					// Creates the formatted message that will be added to the list of message.
-					String formatedMessage = "From: " + from + ". Message: " + data;
+					int fromIndex = message.indexOf(',');
+					int dateIndex = message.indexOf(',', fromIndex+1);
+					
+					String from = message.substring(0, fromIndex);
+					String date = message.substring(fromIndex+1, dateIndex);
+					String messageData = message.substring(dateIndex+1, message.length());
+					String formatedMessage = "From: " + from + ". Date: " + date + ". Message: " + messageData;
+
 					this.addMessage(formatedMessage);
 					System.out.println("A message was added: " + formatedMessage);
 				}
