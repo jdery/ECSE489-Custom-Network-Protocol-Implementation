@@ -30,8 +30,13 @@ public class AppLogoutState extends AppState {
 			this.printHeader("Logging out the user!");
 
 			this.backPointerApp.stopPollingMessages();
-			this.sendMessage(Message.MessageFactory(DefaultMessages.LOGOFF));
-			Vector<Message> messages = this.readMessages();
+			
+			Vector<Message> messages;
+			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
+			synchronized(App.LOCK) {
+				this.sendMessage(Message.MessageFactory(DefaultMessages.LOGOFF));
+				messages = this.readMessages();
+			}
 			
 			// Goes through the potential messages received from the server.
 			// TODO: to verify, the client seams to only receive multiple messages when the

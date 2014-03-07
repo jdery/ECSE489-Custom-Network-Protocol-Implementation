@@ -32,8 +32,12 @@ public class AppEchoState extends AppState {
 		this.printHeader("Echo message sent!");
 		
 		try {
-			this.sendMessage(Message.MessageFactory(DefaultMessages.ECHO));
-			Message responseFromServer = this.readMessage();
+			Message responseFromServer;
+			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
+			synchronized(App.LOCK) {
+				this.sendMessage(Message.MessageFactory(DefaultMessages.ECHO));
+				responseFromServer = this.readMessage();
+			}
 			System.out.println("Response from server: " + responseFromServer.toString());
 			
 			this.pressEnterToContinue();

@@ -28,7 +28,10 @@ public class AppExitState extends AppState {
 	public void execute() {
 		this.printHeader("Exiting the application!");
 		try {
-			this.sendMessage(Message.MessageFactory(DefaultMessages.EXIT));
+			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
+			synchronized(App.LOCK) {
+				this.sendMessage(Message.MessageFactory(DefaultMessages.EXIT));
+			}
 			this.backPointerApp.stopPollingMessages();
 			System.out.println("The connection with the server was closed.");
 			this.pressEnterToContinue();

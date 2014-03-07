@@ -20,7 +20,6 @@ public abstract class AppState {
 	private final int READ_RESPONSE_DELAY = 200;
 
 	protected App backPointerApp;
-	protected InputStream socketInputStream;
 	protected OutputStream socketOutputStream;
 	protected BufferedInputStream bufferedInputStream;
 	protected BufferedReader bufferedReader;
@@ -31,7 +30,6 @@ public abstract class AppState {
 	public AppState(App backPointerApp, InputStream socketInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		this.backPointerApp = backPointerApp;
-		this.socketInputStream = socketInputStream;
 		this.socketOutputStream = socketOutputStream;
 		this.bufferedReader = bufferedReader;
 		this.bufferedInputStream = new BufferedInputStream(socketInputStream);
@@ -50,7 +48,7 @@ public abstract class AppState {
 	 * @throws IOException
 	 */
 	protected void sendMessage(Message messageToSend) throws IOException {
-		socketOutputStream.write(messageToSend.toByteArray());
+		this.socketOutputStream.write(messageToSend.toByteArray());
 	}
 	
 	/**
@@ -60,8 +58,6 @@ public abstract class AppState {
 	 */
 	protected Message readMessage() throws Exception {
 		byte[] tempInformation = new byte[4];
-		// TODO: this is not completed.
-		
 		// This delay will leave time for the input buffer to receive the information
 		// since this method is always called after a message was sent to the server.
 		Thread.sleep(READ_RESPONSE_DELAY);
@@ -92,40 +88,6 @@ public abstract class AppState {
 		return (new Message(messageType, subMessageType, messageData));
 	}
 
-//	/**
-//	 * Reads a message from the InputStreamReader.
-//	 * 
-//	 * @throws IOException
-//	 */
-//	protected Message readMessage() throws Exception {
-//		byte[] tempInformation = new byte[4];
-//		// TODO: this is not completed.
-//		
-//		// This delay will leave time for the input buffer to receive the information
-//		// since this method is always called after a message was sent to the server.
-//		Thread.sleep(READ_RESPONSE_DELAY);
-//		
-//		// Reads the MessageType.
-//		socketInputStream.read(tempInformation);
-//		int messageTypeInt = ByteBuffer.wrap(tempInformation).getInt();
-//		MessageType messageType = MessageType.values()[messageTypeInt];
-//		
-//		// Reads the SubMessageType.
-//		socketInputStream.read(tempInformation);
-//		int subMessageType = ByteBuffer.wrap(tempInformation).getInt();
-//		
-//		// Reads the size of the message.
-//		socketInputStream.read(tempInformation);
-//		int size = ByteBuffer.wrap(tempInformation).getInt();
-//		
-//		// Reads the Message Data.
-//		byte[] messageDataChars = new byte[size];
-//		socketInputStream.read(messageDataChars);
-//		String messageData = new String(messageDataChars);
-//		
-//		return (new Message(messageType, subMessageType, messageData));
-//	}
-	
 	/**
 	 * Reads multiple messages that are stored in the input stream.
 	 * 
@@ -218,8 +180,13 @@ public abstract class AppState {
 	 * @throws Exception
 	 */
 	protected boolean loginUser(String username, String password) throws Exception {
-		this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
-		Message responseFromServer = this.readMessage();
+		
+		Message responseFromServer;
+		// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
+		synchronized(App.LOCK) {
+			this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
+			responseFromServer = this.readMessage();
+		}
 
 		if (responseFromServer.getMessageType() == MessageType.LOGIN) {
 			switch(responseFromServer.getSubMessageType()) {

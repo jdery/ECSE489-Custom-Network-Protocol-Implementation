@@ -28,8 +28,12 @@ public class AppDeleteState extends AppState {
 		try {
 			this.printHeader("Deleting a user!");
 
-			this.sendMessage(Message.MessageFactory(DefaultMessages.DELETE_USER));
-			Message responseFromServer = this.readMessage();
+			Message responseFromServer;
+			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
+			synchronized(App.LOCK) {
+				this.sendMessage(Message.MessageFactory(DefaultMessages.DELETE_USER));
+				responseFromServer = this.readMessage();
+			}
 
 			if (responseFromServer != null && responseFromServer.getMessageType() == MessageType.DELETE_USER) {
 				switch(responseFromServer.getSubMessageType()) {

@@ -59,12 +59,16 @@ public class AppCreateState extends AppState {
 	 * @param password
 	 * @throws Exception
 	 */
-	private void createUserAccount(String username, String password)
-			throws Exception {
-		// Sends the message to create the user in the database.
-		this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + ","
-				+ password));
-		Message responseFromServer = this.readMessage();
+	private void createUserAccount(String username, String password) throws Exception {
+		
+		Message responseFromServer;
+		// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
+		synchronized(App.LOCK) {
+			// Sends the message to create the user in the database.
+			this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + ","
+					+ password));
+			responseFromServer = this.readMessage();
+		}
 
 		// Verify the response from the user.
 		if (responseFromServer.getMessageType() == MessageType.CREATE_USER) {

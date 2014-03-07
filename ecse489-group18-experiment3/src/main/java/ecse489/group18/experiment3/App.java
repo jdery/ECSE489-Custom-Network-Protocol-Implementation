@@ -14,14 +14,14 @@ import java.net.UnknownHostException;
  * 
  */
 public class App implements Runnable {
+	
+	public static final Object LOCK = new Object();
 
 	private InputStream socketInputStream;
 	private OutputStream socketOutputStream;
 	private BufferedReader bufferedReader;
 	private Socket serverSocket;
 	private Thread pollingThread;
-	private String serverAddress;
-	private int serverPort;
 
 	private AppState currentState;
 	private AppUserPollingState userPolling;
@@ -29,8 +29,6 @@ public class App implements Runnable {
 	public AppState appCheckMessagesState, appSendMessageState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
-		this.serverAddress = serverAddress;
-		this.serverPort = serverPort;
 		serverSocket = new Socket(serverAddress, serverPort);
 		socketInputStream = serverSocket.getInputStream();
 		socketOutputStream = serverSocket.getOutputStream();
@@ -70,12 +68,12 @@ public class App implements Runnable {
 	 * @throws UnknownHostException 
 	 */
 	public void startPollingMessages() throws UnknownHostException, IOException {
-		@SuppressWarnings("resource")
-		Socket serverSocket = new Socket(this.serverAddress, this.serverPort);
-		InputStream socketInputStream = serverSocket.getInputStream();
-		OutputStream socketOutputStream = serverSocket.getOutputStream();
+//		@SuppressWarnings("resource")
+//		Socket serverSocket = new Socket(this.serverAddress, this.serverPort);
+//		InputStream socketInputStream = serverSocket.getInputStream();
+//		OutputStream socketOutputStream = serverSocket.getOutputStream();
 		
-		this.userPolling = new AppUserPollingState(this, socketInputStream, socketOutputStream, bufferedReader);
+		this.userPolling = new AppUserPollingState(this, this.socketInputStream, this.socketOutputStream, bufferedReader);
 		pollingThread = new Thread(this.userPolling);
 		pollingThread.start();
 	}
@@ -86,6 +84,7 @@ public class App implements Runnable {
 	public void stopPollingMessages() {
 		if (this.pollingThread != null) {
 			this.pollingThread.interrupt();
+			this.userPolling = null;
 		}
 	}
 	

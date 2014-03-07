@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class AppUserPollingState extends AppState implements Runnable {
 	
-	private final int SLEEPING_PERIOD = 1000;
+	private final int SLEEPING_PERIOD = 3000;
 	private ArrayList<String> listOfMessages = new ArrayList<String>();
 
 	/**
@@ -33,6 +33,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 	public void run() {
 		while(true) {
 			try {
+				System.out.println("Polling the server for new messages.");
 				this.execute();
 				Thread.sleep(SLEEPING_PERIOD);
 			} catch (InterruptedException e) {
@@ -72,8 +73,13 @@ public class AppUserPollingState extends AppState implements Runnable {
 	@Override
 	public void execute() {
 		try {
-			this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
-			Message response = this.readMessage();
+			Message response;
+			
+			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
+			synchronized(App.LOCK) {
+				this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
+				response = this.readMessage();
+			}
 			
 			if (response.getSubMessageType() == 1) {
 				response = this.readMessage();
@@ -91,6 +97,8 @@ public class AppUserPollingState extends AppState implements Runnable {
 //				System.out.println("No new messages.");
 			}
 			
+		} catch (InterruptedException e) {
+			System.err.println("The polling thread has been shutdown.");
 		} catch (Exception e) {
 			System.err.println("A problem occured while polling the server for new messages.");
 			e.printStackTrace();
