@@ -34,7 +34,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 		System.out.println("The polling thread has been started.");
 		try {
 			while(true) {
-//				System.out.println("Polling the server for new messages.");
+				System.out.println("Polling the server for new messages.");
 				this.execute();
 				Thread.sleep(SLEEPING_PERIOD);
 			}
@@ -95,7 +95,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 //				String formatedMessage = "From: " + from + ". Message: " + data;
 				this.addMessage(message);
 			} else {
-//				System.out.println("No new messages.");
+				System.out.println("No new messages.");
 			}
 			
 		} catch (InterruptedException e) {

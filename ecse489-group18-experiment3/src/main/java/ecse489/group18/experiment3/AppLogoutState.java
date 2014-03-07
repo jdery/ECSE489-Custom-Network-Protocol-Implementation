@@ -39,8 +39,6 @@ public class AppLogoutState extends AppState {
 			}
 			
 			// Goes through the potential messages received from the server.
-			// TODO: to verify, the client seams to only receive multiple messages when the
-			// logout message is issued to the server.
 			for (Message responseFromServer : messages) {
 				if (responseFromServer.getMessageType() == MessageType.LOGOFF) {
 					switch(responseFromServer.getSubMessageType()) {
