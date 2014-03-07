@@ -84,7 +84,9 @@ public class App implements Runnable {
 	 * Will stop polling messages for the current user.
 	 */
 	public void stopPollingMessages() {
-		pollingThread.interrupt();
+		if (this.pollingThread != null) {
+			this.pollingThread.interrupt();
+		}
 	}
 	
 	/**

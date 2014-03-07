@@ -32,14 +32,16 @@ public class AppSendMessageState extends AppState {
 		this.printHeader("Send a message to a friend!");
 		
 		try {
-			String destination;
+			String destination, from;
+			System.out.print("From user: ");
+			from = bufferedReader.readLine();
 			System.out.print("Destination user: ");
 			destination = bufferedReader.readLine();
 			
-			if (this.validateCredential(destination)) {
+			if (this.validateCredentials(destination, from)) {
 				System.out.print("Message to be sent: ");
 				String message = bufferedReader.readLine();
-				this.sendMessage(new Message(MessageType.SEND_MESSAGE_TO_USER, 0, destination + "," + message));
+				this.sendMessage(new Message(MessageType.SEND_MESSAGE_TO_USER, 0, destination + "," + from + "@" + message));
 				Message responseFromServer = this.readMessage();
 				
 				// Verify the response from the user.

@@ -1,5 +1,6 @@
 package ecse489.group18.experiment3;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +17,12 @@ import java.util.regex.Pattern;
 public abstract class AppState {
 	
 	private final String COMMA_REGEX = ".*[,].*";
+	private final int READ_RESPONSE_DELAY = 200;
 
 	protected App backPointerApp;
 	protected InputStream socketInputStream;
 	protected OutputStream socketOutputStream;
+	protected BufferedInputStream bufferedInputStream;
 	protected BufferedReader bufferedReader;
 
 	/**
@@ -31,6 +34,7 @@ public abstract class AppState {
 		this.socketInputStream = socketInputStream;
 		this.socketOutputStream = socketOutputStream;
 		this.bufferedReader = bufferedReader;
+		this.bufferedInputStream = new BufferedInputStream(socketInputStream);
 	}
 
 	/**
@@ -48,7 +52,7 @@ public abstract class AppState {
 	protected void sendMessage(Message messageToSend) throws IOException {
 		socketOutputStream.write(messageToSend.toByteArray());
 	}
-
+	
 	/**
 	 * Reads a message from the InputStreamReader.
 	 * 
@@ -60,32 +64,67 @@ public abstract class AppState {
 		
 		// This delay will leave time for the input buffer to receive the information
 		// since this method is always called after a message was sent to the server.
-		Thread.sleep(100);
+		Thread.sleep(READ_RESPONSE_DELAY);
 		
-//		if (socketInputStream.available() == 0) {
-//			return (null);
-//		}
+		// If the buffer is empty it means that we have read all the responses.
+		if (this.bufferedInputStream.available() == 0) {
+			return (null);
+		}
 		
 		// Reads the MessageType.
-		socketInputStream.read(tempInformation);
+		this.bufferedInputStream.read(tempInformation);
 		int messageTypeInt = ByteBuffer.wrap(tempInformation).getInt();
 		MessageType messageType = MessageType.values()[messageTypeInt];
 		
 		// Reads the SubMessageType.
-		socketInputStream.read(tempInformation);
+		this.bufferedInputStream.read(tempInformation);
 		int subMessageType = ByteBuffer.wrap(tempInformation).getInt();
 		
 		// Reads the size of the message.
-		socketInputStream.read(tempInformation);
+		this.bufferedInputStream.read(tempInformation);
 		int size = ByteBuffer.wrap(tempInformation).getInt();
 		
 		// Reads the Message Data.
 		byte[] messageDataChars = new byte[size];
-		socketInputStream.read(messageDataChars);
+		this.bufferedInputStream.read(messageDataChars);
 		String messageData = new String(messageDataChars);
 		
 		return (new Message(messageType, subMessageType, messageData));
 	}
+
+//	/**
+//	 * Reads a message from the InputStreamReader.
+//	 * 
+//	 * @throws IOException
+//	 */
+//	protected Message readMessage() throws Exception {
+//		byte[] tempInformation = new byte[4];
+//		// TODO: this is not completed.
+//		
+//		// This delay will leave time for the input buffer to receive the information
+//		// since this method is always called after a message was sent to the server.
+//		Thread.sleep(READ_RESPONSE_DELAY);
+//		
+//		// Reads the MessageType.
+//		socketInputStream.read(tempInformation);
+//		int messageTypeInt = ByteBuffer.wrap(tempInformation).getInt();
+//		MessageType messageType = MessageType.values()[messageTypeInt];
+//		
+//		// Reads the SubMessageType.
+//		socketInputStream.read(tempInformation);
+//		int subMessageType = ByteBuffer.wrap(tempInformation).getInt();
+//		
+//		// Reads the size of the message.
+//		socketInputStream.read(tempInformation);
+//		int size = ByteBuffer.wrap(tempInformation).getInt();
+//		
+//		// Reads the Message Data.
+//		byte[] messageDataChars = new byte[size];
+//		socketInputStream.read(messageDataChars);
+//		String messageData = new String(messageDataChars);
+//		
+//		return (new Message(messageType, subMessageType, messageData));
+//	}
 	
 	/**
 	 * Reads multiple messages that are stored in the input stream.
