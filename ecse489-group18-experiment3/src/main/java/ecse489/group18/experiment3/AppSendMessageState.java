@@ -41,8 +41,12 @@ public class AppSendMessageState extends AppState {
 			if (this.validateCredentials(destination, from)) {
 				System.out.print("Message to be sent: ");
 				String message = bufferedReader.readLine();
-				this.sendMessage(new Message(MessageType.SEND_MESSAGE_TO_USER, 0, destination + "," + from + "@" + message));
-				Message responseFromServer = this.readMessage();
+				
+				Message responseFromServer;
+				synchronized(App.LOCK) {
+					this.sendMessage(new Message(MessageType.SEND_MESSAGE_TO_USER, 0, destination + "," + from + "@" + message));
+					responseFromServer = this.readMessage();
+				}
 				
 				// Verify the response from the user.
 				if (responseFromServer.getMessageType() == MessageType.SEND_MESSAGE_TO_USER) {

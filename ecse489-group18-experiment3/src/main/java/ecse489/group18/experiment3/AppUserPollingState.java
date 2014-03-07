@@ -75,26 +75,29 @@ public class AppUserPollingState extends AppState implements Runnable {
 	@Override
 	public void execute() {
 		try {			
-			Vector<Message> response;
+			Vector<Message> responses;
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {
 				this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
-				response = this.readMessages();
+				responses = this.readMessages();
 			}
 			
-			if (response.get(0).getSubMessageType() == 1) {
+			if (responses.get(0).getSubMessageType() == 1) {
 				System.out.println("A new message was received!");
-//				response = this.readMessage();
-//				String message = response.getMessageData();
 				
-//				// Finds the form part and the message part of the response.
-//				int division = message.indexOf('@');
-//				String from = message.substring(0, division-1);
-//				String data = message.substring(division+1, message.length());
-//				
-//				// Creates the formatted message that will be added to the list of message.
-//				String formatedMessage = "From: " + from + ". Message: " + data;
-//				this.addMessage(message);
+				for (int i = 0 ; i < responses.size() ; i++) {
+					String message = responses.get(i).getMessageData();					
+					
+					// Finds the form part and the message part of the response.
+					int division = message.indexOf('@');
+					String from = message.substring(0, division-1);
+					String data = message.substring(division+1, message.length());
+					
+					// Creates the formatted message that will be added to the list of message.
+					String formatedMessage = "From: " + from + ". Message: " + data;
+					this.addMessage(formatedMessage);
+					System.out.println("A message was added: " + formatedMessage);
+				}
 			} else {
 //				System.out.println("No new messages.");
 			}
