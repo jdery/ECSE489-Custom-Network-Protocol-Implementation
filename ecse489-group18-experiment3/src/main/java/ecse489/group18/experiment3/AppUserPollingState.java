@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * @author Jean-Sebastien Dery
@@ -34,7 +35,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 		System.out.println("The polling thread has been started.");
 		try {
 			while(true) {
-				System.out.println("Polling the server for new messages.");
+//				System.out.println("Polling the server for new messages.");
 				this.execute();
 				Thread.sleep(SLEEPING_PERIOD);
 			}
@@ -73,18 +74,18 @@ public class AppUserPollingState extends AppState implements Runnable {
 
 	@Override
 	public void execute() {
-		try {
-			Message response;
-			
+		try {			
+			Vector<Message> response;
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {
 				this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
-				response = this.readMessage();
+				response = this.readMessages();
 			}
 			
-			if (response.getSubMessageType() == 1) {
-				response = this.readMessage();
-				String message = response.getMessageData();
+			if (response.get(0).getSubMessageType() == 1) {
+				System.out.println("A new message was received!");
+//				response = this.readMessage();
+//				String message = response.getMessageData();
 				
 //				// Finds the form part and the message part of the response.
 //				int division = message.indexOf('@');
@@ -93,9 +94,9 @@ public class AppUserPollingState extends AppState implements Runnable {
 //				
 //				// Creates the formatted message that will be added to the list of message.
 //				String formatedMessage = "From: " + from + ". Message: " + data;
-				this.addMessage(message);
+//				this.addMessage(message);
 			} else {
-				System.out.println("No new messages.");
+//				System.out.println("No new messages.");
 			}
 			
 		} catch (InterruptedException e) {

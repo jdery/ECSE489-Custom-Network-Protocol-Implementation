@@ -34,6 +34,14 @@ public class App implements Runnable {
 		socketOutputStream = serverSocket.getOutputStream();
 		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
+		this.createAllStates();
+		currentState = mainState;
+	}
+	
+	/**
+	 * Creates all the states that will be used for the FSM.
+	 */
+	private void createAllStates() {
 		loginState = new AppLoginState(this, socketInputStream, socketOutputStream, bufferedReader);
 		mainState = new AppMainState(this, socketInputStream, socketOutputStream, bufferedReader);
 		echoState = new AppEchoState(this, socketInputStream, socketOutputStream, bufferedReader);
@@ -43,9 +51,11 @@ public class App implements Runnable {
 		deleteState = new AppDeleteState(this, socketInputStream, socketOutputStream, bufferedReader);
 		appCheckMessagesState = new AppCheckMessagesState(this, socketInputStream, socketOutputStream, bufferedReader);
 		appSendMessageState = new AppSendMessageState(this, socketInputStream, socketOutputStream, bufferedReader);
-		currentState = mainState;
 	}
 
+	/**
+	 * Will execute the current state of the FSM.
+	 */
 	public void run() {
 		while (true) {
 			currentState.execute();

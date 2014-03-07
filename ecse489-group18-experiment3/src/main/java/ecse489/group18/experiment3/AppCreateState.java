@@ -41,8 +41,9 @@ public class AppCreateState extends AppState {
 				password = bufferedReader.readLine();
 			} while (!validateCredentials(username, username));
 
-			this.createUserAccount(username, password);
-			this.createUserStore();
+			if (this.createUserAccount(username, password)) {
+				this.createUserStore();
+			}
 			
 			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
 			this.pressEnterToContinue();
@@ -59,14 +60,13 @@ public class AppCreateState extends AppState {
 	 * @param password
 	 * @throws Exception
 	 */
-	private void createUserAccount(String username, String password) throws Exception {
+	private boolean createUserAccount(String username, String password) throws Exception {
 		
 		Message responseFromServer;
 		// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 		synchronized(App.LOCK) {
 			// Sends the message to create the user in the database.
-			this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + ","
-					+ password));
+			this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + "," + password));
 			responseFromServer = this.readMessage();
 		}
 
@@ -76,7 +76,7 @@ public class AppCreateState extends AppState {
 			case 0:
 				System.out.println("The user was successfully created!");
 				this.loginUser(username, password);
-				break;
+				return (true);
 			case 1:
 				System.out.println("The user already exists!");
 				break;
@@ -88,9 +88,10 @@ public class AppCreateState extends AppState {
 				break;
 			}
 		} else {
-			System.out.println("An unexpected response was received: "
-					+ responseFromServer.toString());
+			System.out.println("An unexpected response was received: " + responseFromServer.toString());
 		}
+		
+		return (false);
 	}
 
 	/**
@@ -99,9 +100,12 @@ public class AppCreateState extends AppState {
 	 * @throws Exception
 	 */
 	private void createUserStore() throws Exception {
-		// Sends the message to create the user in the database.
-		this.sendMessage(Message.MessageFactory(DefaultMessages.CREATE_STORE));
-		Message responseFromServer = this.readMessage();
+		Message responseFromServer;
+		synchronized(App.LOCK) {
+			// Sends the message to create the user in the database.
+			this.sendMessage(Message.MessageFactory(DefaultMessages.CREATE_STORE));
+			responseFromServer = this.readMessage();
+		}
 
 		// Verify the response from the user.
 		if (responseFromServer.getMessageType() == MessageType.CREATE_STORE) {
