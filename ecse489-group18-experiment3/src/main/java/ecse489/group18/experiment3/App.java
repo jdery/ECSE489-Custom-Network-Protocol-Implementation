@@ -90,7 +90,6 @@ public class App implements Runnable {
 		// This lock will let the polling thread complete a full cycle (which includes reading the BufferedInputReader for a response).
 		synchronized(App.LOCK) {
 			if (this.userPolling != null) {
-				System.out.println("About the interrupt the polling thread.");
 				this.pollingThread.interrupt();
 				this.userPolling = null;
 			}

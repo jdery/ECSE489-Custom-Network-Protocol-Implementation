@@ -32,15 +32,13 @@ public class AppUserPollingState extends AppState implements Runnable {
 	 * 
 	 */
 	public void run() {
-		System.out.println("The polling thread has been started.");
 		try {
 			while(true) {
-//				System.out.println("Polling the server for new messages.");
 				this.execute();
 				Thread.sleep(SLEEPING_PERIOD);
 			}
 		} catch (InterruptedException e) {
-			System.out.println("The thread was interrupted.");
+			System.out.println("The polling thread was interrupted.");
 		}
 	}
 	
@@ -52,7 +50,6 @@ public class AppUserPollingState extends AppState implements Runnable {
 	private void addMessage(String message) {
 		synchronized(this.listOfMessages) {
 			this.listOfMessages.add(message);
-			System.out.println("A message was added!");
 		}
 	}
 	
@@ -83,12 +80,10 @@ public class AppUserPollingState extends AppState implements Runnable {
 			}
 			
 			if (responses.get(0) != null && responses.get(0).getSubMessageType() == 1) {
-				System.out.println("A new message was received!");
+				this.printHeader("You received a new message!");
 				
 				for (int i = 0 ; i < responses.size() ; i++) {
 					String message = responses.get(i).getMessageData();
-					
-//					System.out.println(message);
 					
 					int fromIndex = message.indexOf(',');
 					int dateIndex = message.indexOf(',', fromIndex+1);
@@ -99,10 +94,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 					String formatedMessage = "From: " + from + ". Date: " + date + ". Message: " + messageData;
 
 					this.addMessage(formatedMessage);
-					System.out.println("A message was added: " + formatedMessage);
 				}
-			} else {
-//				System.out.println("No new messages.");
 			}
 			
 		} catch (InterruptedException e) {
