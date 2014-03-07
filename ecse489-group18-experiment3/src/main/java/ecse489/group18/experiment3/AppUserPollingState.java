@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class AppUserPollingState extends AppState implements Runnable {
 	
-	private final int SLEEPING_PERIOD = 3000;
+	private final int SLEEPING_PERIOD = 1000;
 	private ArrayList<String> listOfMessages = new ArrayList<String>();
 
 	/**
@@ -31,14 +31,15 @@ public class AppUserPollingState extends AppState implements Runnable {
 	 * 
 	 */
 	public void run() {
-		while(true) {
-			try {
-				System.out.println("Polling the server for new messages.");
+		System.out.println("The polling thread has been started.");
+		try {
+			while(true) {
+//				System.out.println("Polling the server for new messages.");
 				this.execute();
 				Thread.sleep(SLEEPING_PERIOD);
-			} catch (InterruptedException e) {
-				System.out.println("The Tread.sleep() was interrupted.");
 			}
+		} catch (InterruptedException e) {
+			System.out.println("The thread was interrupted.");
 		}
 	}
 	

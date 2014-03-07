@@ -68,11 +68,6 @@ public class App implements Runnable {
 	 * @throws UnknownHostException 
 	 */
 	public void startPollingMessages() throws UnknownHostException, IOException {
-//		@SuppressWarnings("resource")
-//		Socket serverSocket = new Socket(this.serverAddress, this.serverPort);
-//		InputStream socketInputStream = serverSocket.getInputStream();
-//		OutputStream socketOutputStream = serverSocket.getOutputStream();
-		
 		this.userPolling = new AppUserPollingState(this, this.socketInputStream, this.socketOutputStream, bufferedReader);
 		pollingThread = new Thread(this.userPolling);
 		pollingThread.start();
@@ -82,9 +77,13 @@ public class App implements Runnable {
 	 * Will stop polling messages for the current user.
 	 */
 	public void stopPollingMessages() {
-		if (this.pollingThread != null) {
-			this.pollingThread.interrupt();
-			this.userPolling = null;
+		// This lock will let the polling thread complete a full cycle (which includes reading the BufferedInputReader for a response).
+		synchronized(App.LOCK) {
+			if (this.pollingThread != null) {
+				System.out.println("About the interrupt the polling thread.");
+				this.pollingThread.interrupt();
+				this.userPolling = null;
+			}
 		}
 	}
 	
