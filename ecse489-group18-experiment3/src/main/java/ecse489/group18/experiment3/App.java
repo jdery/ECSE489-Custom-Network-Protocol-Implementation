@@ -21,10 +21,10 @@ public class App implements Runnable {
 	private OutputStream socketOutputStream;
 	private BufferedReader bufferedReader;
 	private Socket serverSocket;
-	private Thread pollingThread;
+	protected Thread pollingThread;
 
-	private AppState currentState;
-	private AppUserPollingState userPolling;
+	protected AppState currentState;
+	protected AppUserPollingState userPolling;
 	public AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
 	public AppState appCheckMessagesState, appSendMessageState;
 
