@@ -114,6 +114,10 @@ public class AppTest extends TestCase
     	// create and assign it
     	AppUserPollingStateMock aupsm = new AppUserPollingStateMock(null, null, null, null);
     	a.setUserPolling(aupsm);
+    	
+    	ret = a.getMessagesFromPollingThread();
+    	assertNotNull(ret);
+    	assertEquals(ret, AppUserPollingStateMock.MESSAGE_PLACEHOLDER);
     }
 
     
