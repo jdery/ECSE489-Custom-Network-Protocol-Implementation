@@ -1,14 +1,13 @@
 package ecse489.group18.experiment3;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class AppUserPollingStateMock extends AppUserPollingState {
+public class AppCheckMessagesStateMock extends AppCheckMessagesState {
 
-	public static String MESSAGE_PLACEHOLDER = "message placeholder";
-	
-	public AppUserPollingStateMock(App backPointerApp,
+	public AppCheckMessagesStateMock(App backPointerApp,
 			InputStream socketInputStream, OutputStream socketOutputStream,
 			BufferedReader bufferedReader) {
 		super(backPointerApp, socketInputStream, socketOutputStream,
@@ -17,12 +16,10 @@ public class AppUserPollingStateMock extends AppUserPollingState {
 	}
 	
 	/**
-	 * Overrides parent's getMessages method with a mock that 
-	 * simply returns a static string.
+	 * We don't want to experience IOExceptions every time
+	 * we run a test that calls this method...
 	 */
 	@Override
-	public String getMessages() {
-		return MESSAGE_PLACEHOLDER;
-	}
+	protected void pressEnterToContinue() throws IOException {}
 
 }

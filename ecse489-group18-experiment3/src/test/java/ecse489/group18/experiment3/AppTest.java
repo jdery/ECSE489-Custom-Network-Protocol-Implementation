@@ -18,7 +18,7 @@ public class AppTest extends TestCase
     {
         super.setUp();
         
-        a = new AppMock("dsp2014.ece.mcgill.ca", 5000);
+        a = new AppMock(Client.SERVER_ADDRESS, Client.SERVER_PORT);
     }
 
     /**
@@ -119,6 +119,5 @@ public class AppTest extends TestCase
     	assertNotNull(ret);
     	assertEquals(ret, AppUserPollingStateMock.MESSAGE_PLACEHOLDER);
     }
-
     
 }

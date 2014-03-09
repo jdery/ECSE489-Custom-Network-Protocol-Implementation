@@ -1,6 +1,8 @@
 package ecse489.group18.experiment3;
 
 public class AppMock extends App {
+	
+	public boolean wasGetMessagesFromPollingThreadCalled = false;
 
 	public AppMock(String serverAddress, int serverPort) throws Exception {
 		super(serverAddress, serverPort);
@@ -21,5 +23,11 @@ public class AppMock extends App {
 	
 	public void setUserPolling(AppUserPollingState aups) {
 		userPolling = aups;
+	}
+	
+	@Override
+	public String getMessagesFromPollingThread() {
+		wasGetMessagesFromPollingThreadCalled = true;
+		return super.getMessagesFromPollingThread();
 	}
 }
