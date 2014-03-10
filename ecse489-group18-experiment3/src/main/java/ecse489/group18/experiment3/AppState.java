@@ -187,7 +187,9 @@ public abstract class AppState {
 		// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 		synchronized(App.LOCK) {
 			this.sendMessage(new Message(MessageType.LOGIN, 0, username + "," + password));
-			responseFromServer = this.readMessage();
+			do {
+				responseFromServer = this.readMessage();
+			} while(responseFromServer ==  null);
 		}
 
 		if (responseFromServer.getMessageType() == MessageType.LOGIN) {
