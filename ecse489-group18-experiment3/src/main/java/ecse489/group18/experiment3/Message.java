@@ -10,6 +10,14 @@ import java.nio.ByteBuffer;
  * 
  */
 public class Message {
+	
+	public static String s_exit = "EXIT";
+	public static String s_echo = "ECHO_TEAM_18";
+	public static String s_logoff = "LOGOFF";
+	public static String s_delete = "DELETE_USER";
+	public static String s_create = "CREATE_STORE";
+	public static String s_query = "QUERY_MESSAGES";
+	
 	/**
 	 * The message type of the current message.
 	 */
@@ -37,18 +45,18 @@ public class Message {
 	static public Message MessageFactory(DefaultMessages defaultMessage) {
 		switch (defaultMessage) {
 		case EXIT:
-			return (new Message(MessageType.EXIT, 0, "EXIT"));
+			return (new Message(MessageType.EXIT, 0, s_exit));
 		case ECHO:
-			return (new Message(MessageType.ECHO, 0, "ECHO_TEAM_18"));
+			return (new Message(MessageType.ECHO, 0, s_echo));
 		case LOGOFF:
 			//FIXME: this does not seem to be working without the LOGOFF text.
-			return (new Message(MessageType.LOGOFF, 0, "LOGOFF"));
+			return (new Message(MessageType.LOGOFF, 0, s_logoff));
 		case DELETE_USER:
-			return (new Message(MessageType.DELETE_USER, 0, "DELETE_USER"));
+			return (new Message(MessageType.DELETE_USER, 0, s_delete));
 		case CREATE_STORE:
-			return (new Message(MessageType.CREATE_STORE, 0, "CREATE_STORE"));
+			return (new Message(MessageType.CREATE_STORE, 0, s_create));
 		case QUERY_MESSAGES:
-			return (new Message(MessageType.QUERY_MESSAGES, 0, "QUERY_MESSAGES"));
+			return (new Message(MessageType.QUERY_MESSAGES, 0, s_query));
 		}
 
 		return (null);

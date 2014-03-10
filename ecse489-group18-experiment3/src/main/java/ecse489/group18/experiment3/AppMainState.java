@@ -30,7 +30,7 @@ public class AppMainState extends AppState {
 	/**
 	 * Prints the main menu lol.
 	 */
-	private void printMainMenu() {
+	protected void printMainMenu() {
 		this.printHeader("Welcome to the main menu!");
 		System.out.println("1 - Log into your account");
 		System.out.println("2 - Logout of account");
@@ -64,7 +64,7 @@ public class AppMainState extends AppState {
 	 *            The input to be considered.
 	 * @return True if it is a valid input and false otherwise.
 	 */
-	private boolean switchState(String nextState) {
+	protected boolean switchState(String nextState) {
 		try {
 			int nextStateValue = Integer.parseInt(nextState);
 			
