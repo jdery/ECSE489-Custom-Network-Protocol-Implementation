@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public abstract class AppState {
 	
 	private final String COMMA_REGEX = ".*[,].*";
-	private final int READ_RESPONSE_DELAY = 1000;
+	private final int READ_RESPONSE_DELAY = 500;
 
 	protected App backPointerApp;
 	protected OutputStream socketOutputStream;
@@ -98,11 +98,13 @@ public abstract class AppState {
 		Vector<Message> messages = new Vector<Message>(5);
 		Message currentMessage;
 		do {
+		do {
 			currentMessage = this.readMessage();
 			if (currentMessage != null) {
 				messages.add(currentMessage);
 			}
 		} while(currentMessage != null);
+		} while(messages.size() == 0);
 		
 		return (messages);
 	}

@@ -13,7 +13,7 @@ import java.util.Vector;
  */
 public class AppUserPollingState extends AppState implements Runnable {
 	
-	private final int SLEEPING_PERIOD = 1000;
+	private final int SLEEPING_PERIOD = 200;
 	private ArrayList<String> listOfMessages = new ArrayList<String>();
 
 	/**

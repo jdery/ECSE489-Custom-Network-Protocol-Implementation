@@ -41,7 +41,6 @@ public class Message {
 		case ECHO:
 			return (new Message(MessageType.ECHO, 0, "ECHO_TEAM_18"));
 		case LOGOFF:
-			//FIXME: this does not seem to be working without the LOGOFF text.
 			return (new Message(MessageType.LOGOFF, 0, "LOGOFF"));
 		case DELETE_USER:
 			return (new Message(MessageType.DELETE_USER, 0, "DELETE_USER"));
@@ -68,23 +67,16 @@ public class Message {
 	 * @return The converted byte[].
 	 */
 	public byte[] toByteArray() {
-		byte[] messageType = ByteBuffer.allocate(4)
-				.putInt(this.messageType.getValue()).array();
-		byte[] subMessageType = ByteBuffer.allocate(4)
-				.putInt(this.subMessageType).array();
+		byte[] messageType = ByteBuffer.allocate(4).putInt(this.messageType.getValue()).array();
+		byte[] subMessageType = ByteBuffer.allocate(4).putInt(this.subMessageType).array();
 		byte[] size = ByteBuffer.allocate(4).putInt(this.size).array();
 		byte[] messageData = this.messageData.getBytes();
 
-		byte[] arrayToBeReturned = new byte[messageType.length
-				+ subMessageType.length + size.length + messageData.length];
-		System.arraycopy(messageType, 0, arrayToBeReturned, 0,
-				messageType.length);
-		System.arraycopy(subMessageType, 0, arrayToBeReturned,
-				messageType.length, subMessageType.length);
-		System.arraycopy(size, 0, arrayToBeReturned, messageType.length
-				+ subMessageType.length, size.length);
-		System.arraycopy(messageData, 0, arrayToBeReturned, messageType.length
-				+ subMessageType.length + size.length, messageData.length);
+		byte[] arrayToBeReturned = new byte[messageType.length + subMessageType.length + size.length + messageData.length];
+		System.arraycopy(messageType, 0, arrayToBeReturned, 0, messageType.length);
+		System.arraycopy(subMessageType, 0, arrayToBeReturned, messageType.length, subMessageType.length);
+		System.arraycopy(size, 0, arrayToBeReturned, messageType.length + subMessageType.length, size.length);
+		System.arraycopy(messageData, 0, arrayToBeReturned, messageType.length + subMessageType.length + size.length, messageData.length);
 		
 		return (arrayToBeReturned);
 	}
