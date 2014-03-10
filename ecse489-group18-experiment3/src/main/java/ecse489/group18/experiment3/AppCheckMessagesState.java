@@ -32,6 +32,14 @@ public class AppCheckMessagesState extends AppState {
 	public void execute() {
 		try {
 			this.printHeader("Messages!!!");
+			
+			if (!this.backPointerApp.isUserLoggedIn()) {
+				System.out.println("You are not logged in!");
+				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.pressEnterToContinue();
+				return;
+			}	
+			
 			String messages = this.backPointerApp.getMessagesFromPollingThread();
 			if (messages == null) {
 				System.out.println("The polling thread is not running yet! You need to be logged in!");

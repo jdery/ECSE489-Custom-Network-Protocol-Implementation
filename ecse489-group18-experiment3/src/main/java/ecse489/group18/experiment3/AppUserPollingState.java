@@ -71,34 +71,39 @@ public class AppUserPollingState extends AppState implements Runnable {
 
 	@Override
 	public void execute() {
-		try {			
+		try {
 			Vector<Message> responses;
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {
+//				System.out.println("Polling the server.");
 				this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
 				responses = this.readMessages();
 			}
 			
-			if (responses.get(0) != null && responses.get(0).getSubMessageType() == 1) {
-				this.printHeader("You received a new message!");
-				
-				for (int i = 0 ; i < responses.size() ; i++) {
-					String message = responses.get(i).getMessageData();
+			if (responses != null && responses.get(0) != null) {
+				if (responses.get(0).getSubMessageType() == 1) {
+					System.out.println();
+					this.printHeader("You received a new message!");
 					
-					int fromIndex = message.indexOf(',');
-					int dateIndex = message.indexOf(',', fromIndex+1);
-					
-					String from = message.substring(0, fromIndex);
-					String date = message.substring(fromIndex+1, dateIndex);
-					String messageData = message.substring(dateIndex+1, message.length());
-					String formatedMessage = "From: " + from + ". Date: " + date + ". Message: " + messageData;
+					for (int i = 0 ; i < responses.size() ; i++) {
+						String message = responses.get(i).getMessageData();
+						
+						int fromIndex = message.indexOf(',');
+						int dateIndex = message.indexOf(',', fromIndex+1);
+						
+						String from = message.substring(0, fromIndex);
+						String date = message.substring(fromIndex+1, dateIndex);
+						String messageData = message.substring(dateIndex+1, message.length());
+						String formatedMessage = "From: " + from + ". Date: " + date + ". Message: " + messageData;
 
-					this.addMessage(formatedMessage);
+						this.addMessage(formatedMessage);
+					}
 				}
 			}
-			
 		} catch (InterruptedException e) {
 			System.err.println("The polling thread has been shutdown.");
+		} catch(ArrayIndexOutOfBoundsException e) {
+			System.out.println("The array exception thing happent");
 		} catch (Exception e) {
 			System.err.println("A problem occured while polling the server for new messages.");
 			e.printStackTrace();

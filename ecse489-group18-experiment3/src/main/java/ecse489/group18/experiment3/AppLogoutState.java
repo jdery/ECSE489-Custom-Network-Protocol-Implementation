@@ -28,8 +28,16 @@ public class AppLogoutState extends AppState {
 	public void execute() {
 		try {
 			this.printHeader("Logging out the user!");
+			
+			if (!this.backPointerApp.isUserLoggedIn()) {
+				System.out.println("You are not logged in!");
+				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.pressEnterToContinue();
+				return;
+			}
 
 			this.backPointerApp.stopPollingMessages();
+			this.backPointerApp.setIsUserLoggedIn(false);
 			
 			Vector<Message> messages;
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.

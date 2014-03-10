@@ -22,6 +22,7 @@ public class App implements Runnable {
 	private BufferedReader bufferedReader;
 	private Socket serverSocket;
 	private Thread pollingThread;
+	private boolean isUserLoggedIn = false;
 
 	private AppState currentState;
 	private AppUserPollingState userPolling;
@@ -36,6 +37,14 @@ public class App implements Runnable {
 
 		this.createAllStates();
 		currentState = mainState;
+	}
+	
+	public boolean isUserLoggedIn() {
+		return (this.isUserLoggedIn);
+	}
+	
+	public void setIsUserLoggedIn(boolean isUserLoggedIn) {
+		this.isUserLoggedIn = isUserLoggedIn;
 	}
 	
 	/**

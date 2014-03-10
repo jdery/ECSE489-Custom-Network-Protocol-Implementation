@@ -32,6 +32,13 @@ public class AppSendMessageState extends AppState {
 		this.printHeader("Send a message to a friend!");
 		
 		try {
+			if (!this.backPointerApp.isUserLoggedIn()) {
+				System.out.println("You are not logged in!");
+				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.pressEnterToContinue();
+				return;
+			}			
+			
 			String destination, from;
 			System.out.print("From user: ");
 			from = bufferedReader.readLine();

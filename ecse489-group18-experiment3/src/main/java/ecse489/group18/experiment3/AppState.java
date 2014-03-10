@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public abstract class AppState {
 	
 	private final String COMMA_REGEX = ".*[,].*";
-	private final int READ_RESPONSE_DELAY = 200;
+	private final int READ_RESPONSE_DELAY = 1000;
 
 	protected App backPointerApp;
 	protected OutputStream socketOutputStream;
@@ -192,6 +192,8 @@ public abstract class AppState {
 			switch(responseFromServer.getSubMessageType()) {
 			case 0:
 				System.out.println("You were successfully authenticated!");
+				this.backPointerApp.setIsUserLoggedIn(true);
+				this.backPointerApp.startPollingMessages();
 				return (true);
 			case 1:
 				System.out.println("You are already logged in!");

@@ -30,6 +30,13 @@ public class AppCreateState extends AppState {
 	public void execute() {
 		try {
 			this.printHeader("Creating a new user!");
+			
+			if (this.backPointerApp.isUserLoggedIn()) {
+				System.out.println("In order to create an account you need to be logged out!");
+				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.pressEnterToContinue();
+				return;
+			}	
 
 			String username, password;
 

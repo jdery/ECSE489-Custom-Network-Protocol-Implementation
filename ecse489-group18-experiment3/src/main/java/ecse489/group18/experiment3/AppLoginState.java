@@ -22,6 +22,13 @@ public class AppLoginState extends AppState {
 		try {
 			this.printHeader("Login Menu");
 			
+			if (this.backPointerApp.isUserLoggedIn()) {
+				System.out.println("The user is already logged in!");
+				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.pressEnterToContinue();
+				return;
+			}
+			
 			String username, password;
 
 			do {
@@ -33,7 +40,8 @@ public class AppLoginState extends AppState {
 			} while (!validateCredentials(username, username));
 
 			if (this.loginUser(username, password)) {
-				this.backPointerApp.startPollingMessages();
+//				this.backPointerApp.setIsUserLoggedIn(true);
+//				this.backPointerApp.startPollingMessages();
 			}
 			
 			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
