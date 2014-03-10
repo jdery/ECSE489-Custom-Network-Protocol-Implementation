@@ -74,7 +74,9 @@ public class AppCreateState extends AppState {
 		synchronized(App.LOCK) {
 			// Sends the message to create the user in the database.
 			this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + "," + password));
-			responseFromServer = this.readMessage();
+			do {
+				responseFromServer = this.readMessage();
+			} while (responseFromServer == null);
 		}
 
 		// Verify the response from the user.
@@ -111,7 +113,9 @@ public class AppCreateState extends AppState {
 		synchronized(App.LOCK) {
 			// Sends the message to create the user in the database.
 			this.sendMessage(Message.MessageFactory(DefaultMessages.CREATE_STORE));
-			responseFromServer = this.readMessage();
+			do {
+				responseFromServer = this.readMessage();
+			} while (responseFromServer == null);
 		}
 
 		// Verify the response from the user.
@@ -128,8 +132,7 @@ public class AppCreateState extends AppState {
 				break;
 			}
 		} else {
-			System.out.println("An unexpected response was received: "
-					+ responseFromServer.toString());
+			System.out.println("An unexpected response was received: " + responseFromServer.toString());
 		}
 	}
 }
