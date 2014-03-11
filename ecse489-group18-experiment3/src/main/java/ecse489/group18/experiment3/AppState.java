@@ -17,11 +17,11 @@ import java.util.regex.Pattern;
 public abstract class AppState {
 	
 	private final String COMMA_REGEX = ".*[,].*";
-	private final int READ_RESPONSE_DELAY = 500;
+	private final int READ_RESPONSE_DELAY = 300;
 
 	protected App backPointerApp;
-	protected OutputStream socketOutputStream;
-	protected BufferedInputStream bufferedInputStream;
+	private OutputStream socketOutputStream;
+	private BufferedInputStream bufferedInputStream;
 	protected BufferedReader bufferedReader;
 
 	/**
@@ -53,10 +53,10 @@ public abstract class AppState {
 	
 	/**
 	 * Reads a message from the InputStreamReader.
-	 * 
+	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	protected Message readMessage() throws Exception {
+	private Message readMessage() throws InterruptedException, IOException {
 		byte[] tempInformation = new byte[4];
 		// This delay will leave time for the input buffer to receive the information
 		// since this method is always called after a message was sent to the server.
@@ -87,23 +87,34 @@ public abstract class AppState {
 		
 		return (new Message(messageType, subMessageType, messageData));
 	}
+	
+	protected Message readResponseFromServer() throws InterruptedException, IOException {
+		Message responseFromServer;
+		do {
+			responseFromServer = this.readMessage();
+		} while (responseFromServer == null);
+		
+		return (responseFromServer);
+	}
 
 	/**
 	 * Reads multiple messages that are stored in the input stream.
 	 * 
 	 * @return A Vector<Message> containing all the messages.
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	 * @throws Exception
 	 */
-	protected Vector<Message> readMessages() throws Exception {
+	protected Vector<Message> readMultipleResponsesFromServer() throws InterruptedException, IOException {
 		Vector<Message> messages = new Vector<Message>(5);
 		Message currentMessage;
 		do {
-		do {
-			currentMessage = this.readMessage();
-			if (currentMessage != null) {
-				messages.add(currentMessage);
-			}
-		} while(currentMessage != null);
+			do {
+				currentMessage = this.readMessage();
+				if (currentMessage != null) {
+					messages.add(currentMessage);
+				}
+			} while(currentMessage != null);
 		} while(messages.size() == 0);
 		
 		return (messages);
@@ -155,7 +166,6 @@ public abstract class AppState {
 	 * @return True if valid and false otherwise.
 	 */
 	protected boolean validateCredential(String credential) {
-		//TODO: need to complete this method.
 		if (credential == null || credential.length() == 0) {
 			return (false);
 		}

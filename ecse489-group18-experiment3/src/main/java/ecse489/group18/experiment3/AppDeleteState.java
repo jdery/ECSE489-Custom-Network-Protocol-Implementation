@@ -40,7 +40,7 @@ public class AppDeleteState extends AppState {
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {
 				this.sendMessage(Message.MessageFactory(DefaultMessages.DELETE_USER));
-				responsesFromServer = this.readMessages();
+				responsesFromServer = this.readMultipleResponsesFromServer();
 			}
 
 			for (Message responseFromServer : responsesFromServer) {

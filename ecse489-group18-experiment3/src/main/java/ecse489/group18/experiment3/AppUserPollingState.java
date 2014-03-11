@@ -77,7 +77,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 			synchronized(App.LOCK) {
 //				System.out.println("Polling the server.");
 				this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
-				responses = this.readMessages();
+				responses = this.readMultipleResponsesFromServer();
 			}
 			
 			if (responses != null && responses.get(0) != null) {

@@ -43,7 +43,7 @@ public class AppLogoutState extends AppState {
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {
 				this.sendMessage(Message.MessageFactory(DefaultMessages.LOGOFF));
-				messages = this.readMessages();
+				messages = this.readMultipleResponsesFromServer();
 			}
 			
 			// Goes through the potential messages received from the server.

@@ -74,9 +74,7 @@ public class AppCreateState extends AppState {
 		synchronized(App.LOCK) {
 			// Sends the message to create the user in the database.
 			this.sendMessage(new Message(MessageType.CREATE_USER, 0, username + "," + password));
-			do {
-				responseFromServer = this.readMessage();
-			} while (responseFromServer == null);
+			responseFromServer = this.readResponseFromServer();
 		}
 
 		// Verify the response from the user.
@@ -113,9 +111,7 @@ public class AppCreateState extends AppState {
 		synchronized(App.LOCK) {
 			// Sends the message to create the user in the database.
 			this.sendMessage(Message.MessageFactory(DefaultMessages.CREATE_STORE));
-			do {
-				responseFromServer = this.readMessage();
-			} while (responseFromServer == null);
+			responseFromServer = this.readResponseFromServer();
 		}
 
 		// Verify the response from the user.
