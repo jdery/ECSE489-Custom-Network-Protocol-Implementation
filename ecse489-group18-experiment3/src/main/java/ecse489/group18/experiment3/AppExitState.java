@@ -26,7 +26,7 @@ public class AppExitState extends AppState {
 
 	@Override
 	public void execute() {
-		this.printHeader("Exiting the application!");
+		Helpers.printHeader("Exiting the application!");
 		try {
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {

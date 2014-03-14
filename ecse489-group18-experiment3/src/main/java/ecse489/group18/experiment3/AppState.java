@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Vector;
-import java.util.regex.Pattern;
 
 /**
  * @author Jean-Sebastien Dery
@@ -15,7 +14,6 @@ import java.util.regex.Pattern;
  */
 public abstract class AppState {
 	
-	private final String COMMA_REGEX = ".*[,].*";
 	private final int READ_RESPONSE_DELAY = 300;
 
 	protected App backPointerApp;
@@ -87,6 +85,13 @@ public abstract class AppState {
 		return (new Message(messageType, subMessageType, messageData));
 	}
 	
+	/**
+	 * Reads a single response from the server and handles network latency.
+	 * 
+	 * @return The Message object that corresponds to the server's response.
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
 	protected Message readResponseFromServer() throws InterruptedException, IOException {
 		Message responseFromServer;
 		do {
@@ -117,61 +122,6 @@ public abstract class AppState {
 		} while(messages.size() == 0);
 		
 		return (messages);
-	}
-
-	/**
-	 * Prints a header on the terminal.
-	 * 
-	 * @param header
-	 *            The header to be printed.
-	 */
-	protected void printHeader(String header) {
-		int lengthOfHeader = header.length() + 4;
-
-		System.out.print("+");
-		for (int i = 0; i < (lengthOfHeader - 2); i++) {
-			System.out.print("-");
-		}
-		System.out.println("+");
-
-		System.out.println("| " + header + " |");
-
-		System.out.print("+");
-		for (int i = 0; i < (lengthOfHeader - 2); i++) {
-			System.out.print("-");
-		}
-		System.out.println("+");
-	}
-	
-	/**
-	 * Will validate that the credential are in the right format.
-	 * 
-	 * @param credential
-	 *            The credential (either password or username) to be validated.
-	 * @return True if valid and false otherwise.
-	 */
-	protected boolean validateCredentials(String username, String password) {
-		if (!validateCredential(username) || !validateCredential(password)) {
-			return (false);
-		}
-		return (true);
-	}
-
-	/**
-	 * Validate the credentials.
-	 * 
-	 * @param credential
-	 *            The credentials to be validated.
-	 * @return True if valid and false otherwise.
-	 */
-	protected boolean validateCredential(String credential) {
-		if (credential == null || credential.length() == 0) {
-			return (false);
-		}
-		if (Pattern.matches(COMMA_REGEX, credential)) {
-			return (false);
-		}
-		return (true);
 	}
 	
 	/**

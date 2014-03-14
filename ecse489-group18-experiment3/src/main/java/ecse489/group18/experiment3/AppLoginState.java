@@ -20,7 +20,7 @@ public class AppLoginState extends AppState {
 	@Override
 	public void execute() {
 		try {
-			this.printHeader("Login Menu");
+			Helpers.printHeader("Login Menu");
 			
 			if (this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("The user is already logged in!");
@@ -37,7 +37,7 @@ public class AppLoginState extends AppState {
 				username = bufferedReader.readLine();
 				System.out.print("Password: ");
 				password = bufferedReader.readLine();
-			} while (!validateCredentials(username, username));
+			} while (!Helpers.validateCredentials(username, username));
 
 			if (this.loginUser(username, password)) {
 //				this.backPointerApp.setIsUserLoggedIn(true);

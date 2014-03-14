@@ -28,7 +28,7 @@ public class AppSendMessageState extends AppState {
 
 	@Override
 	public void execute() {
-		this.printHeader("Send a message to a friend!");
+		Helpers.printHeader("Send a message to a friend!");
 		
 		try {
 			if (!this.backPointerApp.isUserLoggedIn()) {
@@ -44,7 +44,7 @@ public class AppSendMessageState extends AppState {
 			System.out.print("Destination user: ");
 			destination = bufferedReader.readLine();
 			
-			if (this.validateCredentials(destination, from)) {
+			if (Helpers.validateCredentials(destination, from)) {
 				System.out.print("Message to be sent: ");
 				String message = bufferedReader.readLine();
 				

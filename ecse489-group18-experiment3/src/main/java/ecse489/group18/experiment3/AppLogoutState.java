@@ -27,7 +27,7 @@ public class AppLogoutState extends AppState {
 	@Override
 	public void execute() {
 		try {
-			this.printHeader("Logging out the user!");
+			Helpers.printHeader("Logging out the user!");
 			
 			if (!this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("You are not logged in!");

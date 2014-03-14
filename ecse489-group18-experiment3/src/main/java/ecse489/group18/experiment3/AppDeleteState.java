@@ -27,7 +27,7 @@ public class AppDeleteState extends AppState {
 	@Override
 	public void execute() {
 		try {
-			this.printHeader("Deleting a user!");
+			Helpers.printHeader("Deleting a user!");
 			
 			if (!this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("You are not logged in!");

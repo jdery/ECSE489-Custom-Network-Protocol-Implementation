@@ -30,7 +30,7 @@ public class AppMainState extends AppState {
 	 * Prints the main menu lol.
 	 */
 	private void printMainMenu() {
-		this.printHeader("Welcome to the main menu!");
+		Helpers.printHeader("Welcome to the main menu!");
 		System.out.println("1 - Log into your account");
 		System.out.println("2 - Logout of account");
 		System.out.println("3 - Create a new account");

@@ -29,7 +29,7 @@ public class AppCreateState extends AppState {
 	@Override
 	public void execute() {
 		try {
-			this.printHeader("Creating a new user!");
+			Helpers.printHeader("Creating a new user!");
 			
 			if (this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("In order to create an account you need to be logged out!");
@@ -46,7 +46,7 @@ public class AppCreateState extends AppState {
 				username = bufferedReader.readLine();
 				System.out.print("Password: ");
 				password = bufferedReader.readLine();
-			} while (!validateCredentials(username, username));
+			} while (!Helpers.validateCredentials(username, username));
 
 			if (this.createUserAccount(username, password)) {
 				this.createUserStore();

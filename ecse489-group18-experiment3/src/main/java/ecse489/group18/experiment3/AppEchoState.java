@@ -28,7 +28,7 @@ public class AppEchoState extends AppState {
 
 	@Override
 	public void execute() {
-		this.printHeader("Echo message sent!");
+		Helpers.printHeader("Echo message sent!");
 		
 		try {
 			Message responseFromServer;

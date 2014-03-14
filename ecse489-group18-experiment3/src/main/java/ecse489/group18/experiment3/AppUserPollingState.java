@@ -83,7 +83,7 @@ public class AppUserPollingState extends AppState implements Runnable {
 			if (responses != null && responses.get(0) != null) {
 				if (responses.get(0).getSubMessageType() == 1) {
 					System.out.println();
-					this.printHeader("You received a new message!");
+					Helpers.printHeader("You received a new message!");
 					
 					for (int i = 0 ; i < responses.size() ; i++) {
 						String message = responses.get(i).getMessageData();
