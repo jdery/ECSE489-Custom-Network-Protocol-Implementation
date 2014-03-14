@@ -3,8 +3,8 @@
  */
 package ecse489.group18.experiment3;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -20,10 +20,9 @@ public class AppEchoState extends AppState {
 	 * @param socketOutputStream
 	 * @param bufferedReader
 	 */
-	public AppEchoState(App backPointerApp,
-			InputStream socketInputStream,
+	public AppEchoState(App backPointerApp, BufferedInputStream bufferedInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
-		super(backPointerApp, socketInputStream, socketOutputStream,
+		super(backPointerApp, bufferedInputStream, socketOutputStream,
 				bufferedReader);
 	}
 

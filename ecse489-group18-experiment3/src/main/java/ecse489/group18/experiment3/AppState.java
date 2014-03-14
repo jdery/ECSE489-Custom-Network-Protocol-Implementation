@@ -3,7 +3,6 @@ package ecse489.group18.experiment3;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Vector;
@@ -27,12 +26,12 @@ public abstract class AppState {
 	/**
 	 * 
 	 */
-	public AppState(App backPointerApp, InputStream socketInputStream,
+	public AppState(App backPointerApp, BufferedInputStream bufferedInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		this.backPointerApp = backPointerApp;
 		this.socketOutputStream = socketOutputStream;
 		this.bufferedReader = bufferedReader;
-		this.bufferedInputStream = new BufferedInputStream(socketInputStream);
+		this.bufferedInputStream = bufferedInputStream;
 	}
 
 	/**

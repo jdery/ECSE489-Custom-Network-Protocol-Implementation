@@ -1,7 +1,7 @@
 package ecse489.group18.experiment3;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -22,9 +22,9 @@ public class AppUserPollingState extends AppState implements Runnable {
 	 * @param socketOutputStream
 	 * @param bufferedReader
 	 */
-	public AppUserPollingState(App backPointerApp, InputStream socketInputStream,
+	public AppUserPollingState(App backPointerApp, BufferedInputStream bufferedInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
-		super(backPointerApp, socketInputStream, socketOutputStream,
+		super(backPointerApp, bufferedInputStream, socketOutputStream,
 				bufferedReader);
 	}
 

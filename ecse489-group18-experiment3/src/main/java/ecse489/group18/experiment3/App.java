@@ -1,8 +1,8 @@
 package ecse489.group18.experiment3;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -17,7 +17,7 @@ public class App implements Runnable {
 	
 	public static final Object LOCK = new Object();
 
-	private InputStream socketInputStream;
+	private BufferedInputStream bufferedInputStream;
 	private OutputStream socketOutputStream;
 	private BufferedReader bufferedReader;
 	private Socket serverSocket;
@@ -31,7 +31,7 @@ public class App implements Runnable {
 
 	public App(String serverAddress, int serverPort) throws Exception {
 		serverSocket = new Socket(serverAddress, serverPort);
-		socketInputStream = serverSocket.getInputStream();
+		bufferedInputStream = new BufferedInputStream(serverSocket.getInputStream());
 		socketOutputStream = serverSocket.getOutputStream();
 		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -51,15 +51,15 @@ public class App implements Runnable {
 	 * Creates all the states that will be used for the FSM.
 	 */
 	private void createAllStates() {
-		loginState = new AppLoginState(this, socketInputStream, socketOutputStream, bufferedReader);
-		mainState = new AppMainState(this, socketInputStream, socketOutputStream, bufferedReader);
-		echoState = new AppEchoState(this, socketInputStream, socketOutputStream, bufferedReader);
-		exitState = new AppExitState(this, socketInputStream, socketOutputStream, bufferedReader);
-		createState = new AppCreateState(this, socketInputStream, socketOutputStream, bufferedReader);
-		logoutState = new AppLogoutState(this, socketInputStream, socketOutputStream, bufferedReader);
-		deleteState = new AppDeleteState(this, socketInputStream, socketOutputStream, bufferedReader);
-		appCheckMessagesState = new AppCheckMessagesState(this, socketInputStream, socketOutputStream, bufferedReader);
-		appSendMessageState = new AppSendMessageState(this, socketInputStream, socketOutputStream, bufferedReader);
+		loginState = new AppLoginState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		mainState = new AppMainState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		echoState = new AppEchoState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		exitState = new AppExitState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		createState = new AppCreateState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		logoutState = new AppLogoutState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		deleteState = new AppDeleteState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		appCheckMessagesState = new AppCheckMessagesState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		appSendMessageState = new AppSendMessageState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class App implements Runnable {
 	 * @throws UnknownHostException 
 	 */
 	public void startPollingMessages() throws UnknownHostException, IOException {
-		this.userPolling = new AppUserPollingState(this, this.socketInputStream, this.socketOutputStream, bufferedReader);
+		this.userPolling = new AppUserPollingState(this, this.bufferedInputStream, this.socketOutputStream, bufferedReader);
 		pollingThread = new Thread(this.userPolling);
 		pollingThread.start();
 	}

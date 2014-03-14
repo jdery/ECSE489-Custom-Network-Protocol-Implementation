@@ -3,9 +3,9 @@
  */
 package ecse489.group18.experiment3;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -21,10 +21,9 @@ public class AppCheckMessagesState extends AppState {
 	 * @param socketOutputStream
 	 * @param bufferedReader
 	 */
-	public AppCheckMessagesState(App backPointerApp,
-			InputStream socketInputStream, OutputStream socketOutputStream,
-			BufferedReader bufferedReader) {
-		super(backPointerApp, socketInputStream, socketOutputStream,
+	public AppCheckMessagesState(App backPointerApp, BufferedInputStream bufferedInputStream,
+			OutputStream socketOutputStream, BufferedReader bufferedReader) {
+		super(backPointerApp, bufferedInputStream, socketOutputStream,
 				bufferedReader);
 	}
 

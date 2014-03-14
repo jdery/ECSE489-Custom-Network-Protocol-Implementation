@@ -1,7 +1,7 @@
 package ecse489.group18.experiment3;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -11,9 +11,9 @@ import java.io.OutputStream;
  */
 public class AppLoginState extends AppState {
 
-	public AppLoginState(App backPointerApp, InputStream socketInputStream,
+	public AppLoginState(App backPointerApp, BufferedInputStream bufferedInputStream,
 			OutputStream socketOutputStream, BufferedReader bufferedReader) {
-		super(backPointerApp, socketInputStream, socketOutputStream,
+		super(backPointerApp, bufferedInputStream, socketOutputStream,
 				bufferedReader);
 	}
 
