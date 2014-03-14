@@ -1,0 +1,4 @@
+Already completed login-logout
+
+1.) Resource queries
+2.) 

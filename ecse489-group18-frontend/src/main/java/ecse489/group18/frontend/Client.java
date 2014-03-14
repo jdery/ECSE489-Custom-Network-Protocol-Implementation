@@ -10,13 +10,20 @@ public class Client {
 	/**
 	 * The server's port number on which it will be listening.
 	 */
-	public static final int SERVER_PORT = 5000;
+	public static int SERVER_PORT = 5000;
 	/**
 	 * The server's address.
 	 */
-	public static final String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
+	public static String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
 
 	public static void main(String[] args) {
+//		// Verifies that the number of arguments are correct and if not displays a message.
+//		int numberOfArguments = args.length;
+//		if (numberOfArguments != 0 && numberOfArguments != 1 && numberOfArguments != 3) {
+//			System.err.println("You did not entered the proper amount of arguments!");
+//			System.out.println("How to use this ");
+//		}
+
 		App myApp;
 		
 		try {
