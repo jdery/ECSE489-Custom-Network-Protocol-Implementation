@@ -24,7 +24,7 @@ public class AppLoginState extends AppState {
 			
 			if (this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("The user is already logged in!");
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				this.pressEnterToContinue();
 				return;
 			}
@@ -44,7 +44,7 @@ public class AppLoginState extends AppState {
 //				this.backPointerApp.startPollingMessages();
 			}
 			
-			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 			this.pressEnterToContinue();
 		} catch (Exception e) {
 			e.printStackTrace();

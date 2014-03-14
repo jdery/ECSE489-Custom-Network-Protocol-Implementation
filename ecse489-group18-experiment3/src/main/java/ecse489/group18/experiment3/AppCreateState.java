@@ -33,7 +33,7 @@ public class AppCreateState extends AppState {
 			
 			if (this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("In order to create an account you need to be logged out!");
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				this.pressEnterToContinue();
 				return;
 			}	
@@ -52,7 +52,7 @@ public class AppCreateState extends AppState {
 				this.createUserStore();
 			}
 			
-			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 			this.pressEnterToContinue();
 
 		} catch (Exception e) {

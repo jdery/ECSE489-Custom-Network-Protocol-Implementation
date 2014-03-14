@@ -6,6 +6,7 @@ package ecse489.group18.experiment3;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.OutputStream;
+import java.util.NoSuchElementException;
 
 /**
  * @author Jean-Sebastien Dery
@@ -27,7 +28,7 @@ public class AppMainState extends AppState {
 	}
 
 	/**
-	 * Prints the main menu lol.
+	 * Prints the main menu.
 	 */
 	private void printMainMenu() {
 		Helpers.printHeader("Welcome to the main menu!");
@@ -66,38 +67,13 @@ public class AppMainState extends AppState {
 	private boolean switchState(String nextState) {
 		try {
 			int nextStateValue = Integer.parseInt(nextState);
-			
-			switch(nextStateValue) {
-			case 1:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.loginState);
-				break;
-			case 2:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.logoutState);
-				break;
-			case 3:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.createState);
-				break;
-			case 4:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.deleteState);
-				break;
-			case 5:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.echoState);
-				break;
-			case 6:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.appSendMessageState);
-				break;
-			case 7:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.appCheckMessagesState);
-				break;
-			case 8:
-				this.backPointerApp.changeCurrentState(this.backPointerApp.exitState);
-				break;
-			default:
-				System.out.println("Enter a valid option!");
-				return (false);
-			}
+			AppStates nexState = AppStates.getEnum(nextStateValue);
+			this.backPointerApp.changeCurrentState(nexState);
 		} catch(NumberFormatException e) {
-			System.out.println("Enter an integer value!");
+			System.out.println("You must enter an integer value!");
+			return (false);
+		} catch(NoSuchElementException e) {
+			System.out.println("You must enter a valid value!");
 			return (false);
 		}
 		

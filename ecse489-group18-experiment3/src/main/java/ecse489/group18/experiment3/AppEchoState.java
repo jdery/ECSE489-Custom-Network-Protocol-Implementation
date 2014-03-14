@@ -44,6 +44,6 @@ public class AppEchoState extends AppState {
 			e.printStackTrace();
 		}
 		
-		this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+		this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 	}
 }

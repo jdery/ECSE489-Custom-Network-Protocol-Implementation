@@ -26,8 +26,8 @@ public class App implements Runnable {
 
 	private AppState currentState;
 	private AppUserPollingState userPolling;
-	public AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
-	public AppState appCheckMessagesState, appSendMessageState;
+	private AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
+	private AppState appCheckMessagesState, appSendMessageState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
 		serverSocket = new Socket(serverAddress, serverPort);
@@ -77,8 +77,38 @@ public class App implements Runnable {
 	 * @param nextState
 	 *            The next state that the FSM will be in.
 	 */
-	public void changeCurrentState(AppState nextState) {
-		this.currentState = nextState;
+	public void changeCurrentState(AppStates nextState) {
+		switch(nextState) {
+		case LOGIN:
+			this.currentState = this.loginState;
+			break;
+		case MAIN_MENU:
+			this.currentState = this.mainState;
+			break;
+		case SEND_ECHO:
+			this.currentState = this.echoState;
+			break;
+		case EXIT_APPLICATION:
+			this.currentState = this.exitState;
+			break;
+		case CREATE_USER:
+			this.currentState = this.createState;
+			break;
+		case LOGOUT_USER:
+			this.currentState = this.logoutState;
+			break;
+		case DELETE_USER:
+			this.currentState = this.deleteState;
+			break;
+		case CHECK_RECEIVED_MESSAGES:
+			this.currentState = this.appCheckMessagesState;
+			break;
+		case SEND_MESSAGE:
+			this.currentState = this.appSendMessageState;
+			break;
+		default:
+			this.currentState = this.mainState;
+		}
 	}
 	
 	/**

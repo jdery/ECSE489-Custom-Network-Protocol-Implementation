@@ -31,7 +31,7 @@ public class AppLogoutState extends AppState {
 			
 			if (!this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("You are not logged in!");
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				this.pressEnterToContinue();
 				return;
 			}
@@ -70,6 +70,6 @@ public class AppLogoutState extends AppState {
 			e.printStackTrace();
 		}
 		
-		this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+		this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 	}
 }

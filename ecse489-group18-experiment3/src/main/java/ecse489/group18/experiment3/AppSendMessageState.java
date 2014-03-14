@@ -33,7 +33,7 @@ public class AppSendMessageState extends AppState {
 		try {
 			if (!this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("You are not logged in!");
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				this.pressEnterToContinue();
 				return;
 			}			
@@ -80,7 +80,7 @@ public class AppSendMessageState extends AppState {
 				System.err.println("The destination is not of a valid format!");
 			}
 			
-			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 			this.pressEnterToContinue();
 		} catch (Exception e) {
 			System.err.println("An error occured while reading your input.");

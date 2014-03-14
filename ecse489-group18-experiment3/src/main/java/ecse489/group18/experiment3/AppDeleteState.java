@@ -31,7 +31,7 @@ public class AppDeleteState extends AppState {
 			
 			if (!this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("You are not logged in!");
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				this.pressEnterToContinue();
 				return;
 			}
@@ -57,7 +57,7 @@ public class AppDeleteState extends AppState {
 					default:
 						System.out.println("Something went wrong in the process...");
 					}
-					this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+					this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				} else if (responseFromServer != null) {
 					System.err.println("An unexpected response was received: " + responseFromServer.toString());
 				} else {

@@ -34,10 +34,10 @@ public class AppCheckMessagesState extends AppState {
 			
 			if (!this.backPointerApp.isUserLoggedIn()) {
 				System.out.println("You are not logged in!");
-				this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				this.pressEnterToContinue();
 				return;
-			}	
+			}
 			
 			String messages = this.backPointerApp.getMessagesFromPollingThread();
 			if (messages == null) {
@@ -46,7 +46,7 @@ public class AppCheckMessagesState extends AppState {
 				System.out.println(messages);
 			}
 			this.pressEnterToContinue();
-			this.backPointerApp.changeCurrentState(this.backPointerApp.mainState);
+			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
