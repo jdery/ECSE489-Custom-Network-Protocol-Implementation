@@ -2,6 +2,12 @@ package networking;
 
 import java.net.*;
 import java.io.IOException;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
 
 import networking.auth.AuthenticationManager;
 import networking.auth.IAuthenticator;
@@ -12,14 +18,23 @@ import logging.Logfile;
 public class ServerSocketListener extends Thread implements IAuthenticator {
 
 	private boolean alive;
-	private ServerSocket socket;
+	private SSLServerSocketFactory serverSocketFactory;
+	private ServerSocket serverSocket;
 	private IResource resource;
 	
 	private AuthenticationManager manager;
 	
 	public ServerSocketListener(int port, IResource resource) {
+		// Resource regarding the System properties: http://stackoverflow.com/questions/5871279/java-ssl-and-cert-keystore
+		// How I generated the keystore: http://docs.oracle.com/javase/tutorial/security/toolsign/step3.html
 		try {
-			this.socket = new ServerSocket(port);
+			// Sets the location of the application's Keystore where the certificate and private key will be stored.
+			System.setProperty("javax.net.ssl.keyStore", "telecom_server_keystore");
+			// Sets the password required to access the private key in hte Keystore file.
+			System.setProperty("javax.net.ssl.keyStorePassword", "P455w0!D");
+			
+			this.serverSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+			this.serverSocket = serverSocketFactory.createServerSocket(port);
 			this.resource = resource; 
 			alive = true;
 			
@@ -28,6 +43,7 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 			Logfile.writeToFile("Listening for incoming connections on port: " + port, LogLevel.INFO);
 		} catch (IOException e) {
 			Logfile.writeToFile("Failed to open server socket due to error: " + e.getMessage(), LogLevel.CRITICAL);
+			e.printStackTrace();
 			alive = false;
 		}
 	}
@@ -36,7 +52,14 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 		while(alive) {
 			try {
 				Logfile.writeToFile("Waiting for a new client connection", LogLevel.DEBUG);
-				Socket client = socket.accept();
+				Socket client = serverSocket.accept();
+				
+				SSLSession session = ((SSLSocket) client).getSession();
+			    Certificate[] cchain2 = session.getLocalCertificates();
+			    for (int i = 0; i < cchain2.length; i++) {
+			      System.out.println(((X509Certificate) cchain2[i]).getSubjectDN());
+			    }
+				
 				ClientProcessor cp = new ClientProcessor(client, resource, manager);
 				cp.start();
 				Logfile.writeToFile("Accepted connection from: " + client.getInetAddress().getHostAddress(), LogLevel.DEBUG);
@@ -49,7 +72,7 @@ public class ServerSocketListener extends Thread implements IAuthenticator {
 	
 	public void kill() {
 		try {
-			this.socket.close();
+			this.serverSocket.close();
 		} catch (IOException e) {
 			Logfile.writeToFile("Failed to close server socket", LogLevel.CRITICAL);
 		}
