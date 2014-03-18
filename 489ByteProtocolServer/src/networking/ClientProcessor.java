@@ -1,57 +1,58 @@
 package networking;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
-import database.IResource;
 import logging.LogLevel;
 import logging.Logfile;
 import networking.auth.AuthenticationManager;
-import networking.protocol.*;
+import networking.protocol.IAsyncClientWriter;
+import networking.protocol.IncomingPacketHandler;
 import networking.protocol.types.MessageType;
+import database.IResource;
 
 public class ClientProcessor extends Thread implements IAsyncClientWriter {
 
 	private boolean alive;
 	private Socket s;
 
-	private InputStream rawIn;
+	private BufferedInputStream rawIn;
 	private OutputStream rawOut;
 
 	private IncomingPacketHandler processor;
 	private static final int MAXIMUM_PACKET_SIZE = 262144; // bytes = 256 KB
 
-	public ClientProcessor(Socket s, IResource resource,
-			AuthenticationManager manager) {
+	public ClientProcessor(Socket s, IResource resource, AuthenticationManager manager) {
 		try {
 			this.s = s;
 			this.alive = true;
-			this.rawIn = s.getInputStream();
+			this.rawIn = new BufferedInputStream(s.getInputStream());
 			this.rawOut = s.getOutputStream();
 
 			processor = new IncomingPacketHandler(manager, resource, this);
 		} catch (IOException e) {
-			Logfile.writeToFile(
-					"Failed to create the client stream readers and writers",
-					LogLevel.ERROR);
+			Logfile.writeToFile("Failed to create the client stream readers and writers", LogLevel.ERROR);
 			this.alive = false;
 		}
 	}
 
 	public UnformattedPacket readPacket() {
 		try {
-			while (rawIn.available() <= 12) {
-				Thread.sleep(50);
+			
+			byte[] allHeaders = new byte[12];
+			int bytesRead = 0;
+			while(bytesRead < 12) {
+			  bytesRead += rawIn.read(allHeaders, bytesRead, 12 - bytesRead);
 			}
-			byte[] hArray = new byte[4];
-			byte[] h2Array = new byte[4];
-			byte[] sArray = new byte[4];
 
-			rawIn.read(hArray, 0, 4);
-			rawIn.read(h2Array, 0, 4);
-			rawIn.read(sArray, 0, 4);
+			byte[] hArray = Arrays.copyOfRange(allHeaders,0,4);
+			byte[] h2Array = Arrays.copyOfRange(allHeaders,4,8);
+			byte[] sArray = Arrays.copyOfRange(allHeaders,8,12);
 
 			int s = ByteBuffer.wrap(sArray).getInt();
 
@@ -75,11 +76,11 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 			rawIn.read(data, 0, s);
 
 			return new UnformattedPacket(hArray, h2Array, sArray, data);
-		} catch (InterruptedException ex) {
-			Logfile.writeToFile("Thread interrupted on socket polling loop",
-					LogLevel.ERROR);
-			this.closeConnection();
-			return null;
+//		} catch (InterruptedException ex) {
+//			Logfile.writeToFile("Thread interrupted on socket polling loop",
+//					LogLevel.ERROR);
+//			this.closeConnection();
+//			return null;
 		} catch (IOException e) {
 			Logfile.writeToFile("Failed to read from socket "
 					+ getHost().getHostAddress(), LogLevel.ERROR);

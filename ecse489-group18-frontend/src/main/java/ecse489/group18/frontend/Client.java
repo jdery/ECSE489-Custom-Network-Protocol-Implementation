@@ -14,7 +14,8 @@ public class Client {
 	/**
 	 * The server's address.
 	 */
-	public static String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
+//	public static String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
+	public static String SERVER_ADDRESS = "localhost";
 
 	public static void main(String[] args) {
 //		// Verifies that the number of arguments are correct and if not displays a message.
@@ -29,10 +30,10 @@ public class Client {
 		try {
 			System.out.println("Enabling the connection with the server...");
 			myApp = new App(SERVER_ADDRESS, SERVER_PORT);
-			System.out.println("The connection was established successfully.");
 		} catch (Exception e) {
 			System.err.println("An error occured while trying to connect to the server.");
 			e.printStackTrace();
+			System.err.println("Terminating the application...");
 			return;
 		}
 		

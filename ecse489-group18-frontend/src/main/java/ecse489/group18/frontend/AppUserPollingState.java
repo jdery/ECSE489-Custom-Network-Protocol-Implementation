@@ -75,7 +75,6 @@ public class AppUserPollingState extends AppState implements Runnable {
 			Vector<Message> responses;
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {
-//				System.out.println("Polling the server.");
 				this.sendMessage(Message.MessageFactory(DefaultMessages.QUERY_MESSAGES));
 				responses = this.readMultipleResponsesFromServer();
 			}
@@ -102,8 +101,6 @@ public class AppUserPollingState extends AppState implements Runnable {
 			}
 		} catch (InterruptedException e) {
 			System.err.println("The polling thread has been shutdown.");
-		} catch(ArrayIndexOutOfBoundsException e) {
-			System.out.println("The array exception thing happent");
 		} catch (Exception e) {
 			System.err.println("A problem occured while polling the server for new messages.");
 			e.printStackTrace();

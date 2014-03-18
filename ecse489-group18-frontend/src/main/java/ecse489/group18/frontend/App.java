@@ -7,6 +7,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * @author Jean-Sebastien Dery
@@ -30,7 +36,18 @@ public class App implements Runnable {
 	private AppState appCheckMessagesState, appSendMessageState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
-		serverSocket = new Socket(serverAddress, serverPort);
+//		// Sets the system variable required to handle the Truststore.
+		System.setProperty("javax.net.ssl.trustStore", "cacerts.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "ThisIsOurPass123");
+		
+		// Creates the SSL connection with the known certificate.
+	    SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
+	    this.serverSocket = ssf.createSocket(serverAddress, serverPort);
+	    // The timeout is used here so that we don't block on read calls.
+	    // it is critical since the application normally stalls on these BufferedInputStream.read().
+	    this.serverSocket.setSoTimeout(100);
+//	    this.serverSocket = new Socket(serverAddress, serverPort);
+		
 		bufferedInputStream = new BufferedInputStream(serverSocket.getInputStream());
 		socketOutputStream = serverSocket.getOutputStream();
 		bufferedReader = new BufferedReader(new InputStreamReader(System.in));

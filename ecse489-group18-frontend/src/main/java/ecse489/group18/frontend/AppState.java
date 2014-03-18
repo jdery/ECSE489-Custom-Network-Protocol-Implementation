@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Vector;
 
 /**
@@ -13,8 +14,6 @@ import java.util.Vector;
  * 
  */
 public abstract class AppState {
-	
-	private final int READ_RESPONSE_DELAY = 300;
 
 	protected App backPointerApp;
 	private OutputStream socketOutputStream;
@@ -54,35 +53,41 @@ public abstract class AppState {
 	 * @throws IOException
 	 */
 	private Message readMessage() throws InterruptedException, IOException {
-		byte[] tempInformation = new byte[4];
-		// This delay will leave time for the input buffer to receive the information
-		// since this method is always called after a message was sent to the server.
-		Thread.sleep(READ_RESPONSE_DELAY);
-		
-		// If the buffer is empty it means that we have read all the responses.
-		if (this.bufferedInputStream.available() == 0) {
+		try {
+			byte[] tempInformation = new byte[4];
+			
+			// Reads the first 3 parameters of the message.
+			byte[] allHeaders = new byte[12];
+			int bytesRead = 0;
+			while(bytesRead < 12) {
+			  bytesRead += bufferedInputStream.read(allHeaders, bytesRead, 12 - bytesRead);
+			}
+			
+			// Reads the MessageType.
+			tempInformation = Arrays.copyOfRange(allHeaders,0,4);
+			int messageTypeInt = ByteBuffer.wrap(tempInformation).getInt();
+			MessageType messageType = MessageType.values()[messageTypeInt];
+			
+			// Reads the SubMessageType.
+			tempInformation = Arrays.copyOfRange(allHeaders,4,8);
+			int subMessageType = ByteBuffer.wrap(tempInformation).getInt();
+			
+			// Reads the size of the message.
+			tempInformation = Arrays.copyOfRange(allHeaders,8,12);
+			int size = ByteBuffer.wrap(tempInformation).getInt();
+			
+			// Reads the Message Data.
+			byte[] messageDataChars = new byte[size];
+			this.bufferedInputStream.read(messageDataChars, 0, size);
+			String messageData = new String(messageDataChars);
+			
+			return (new Message(messageType, subMessageType, messageData));
+		} catch(java.net.SocketTimeoutException e) {
+			// If we reach here it means that the timer on the socket for the read operation
+			// has timedout. This is normal since we don't want it to stall forever if there
+			// is no response from the server.
 			return (null);
 		}
-		
-		// Reads the MessageType.
-		this.bufferedInputStream.read(tempInformation);
-		int messageTypeInt = ByteBuffer.wrap(tempInformation).getInt();
-		MessageType messageType = MessageType.values()[messageTypeInt];
-		
-		// Reads the SubMessageType.
-		this.bufferedInputStream.read(tempInformation);
-		int subMessageType = ByteBuffer.wrap(tempInformation).getInt();
-		
-		// Reads the size of the message.
-		this.bufferedInputStream.read(tempInformation);
-		int size = ByteBuffer.wrap(tempInformation).getInt();
-		
-		// Reads the Message Data.
-		byte[] messageDataChars = new byte[size];
-		this.bufferedInputStream.read(messageDataChars);
-		String messageData = new String(messageDataChars);
-		
-		return (new Message(messageType, subMessageType, messageData));
 	}
 	
 	/**
