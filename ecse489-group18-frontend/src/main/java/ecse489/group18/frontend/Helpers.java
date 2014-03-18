@@ -13,6 +13,7 @@ public class Helpers {
 	private static final String JPEG_REGEX = ".*[.][jJ][pP][eE][gG]";
 	private static final String PNG_REGEX = ".*[.][pP][nN][gG]";
 	private static final String ZIP_REGEX = ".*[.][zZ][iI][pP]";
+	private static final String TXT_REGEX = ".*[.][tT][xX][tT]";
 	
 	/**
 	 * Prints a header on the terminal.
@@ -76,7 +77,7 @@ public class Helpers {
 	 * @return True if valid and false otherwise.
 	 */
 	public static boolean validateFileExtention(String extension) {
-		if (Pattern.matches(JPEG_REGEX, extension) || Pattern.matches(PNG_REGEX, extension) || Pattern.matches(ZIP_REGEX, extension)) {
+		if (Pattern.matches(JPEG_REGEX, extension) || Pattern.matches(PNG_REGEX, extension) || Pattern.matches(ZIP_REGEX, extension) || Pattern.matches(TXT_REGEX, extension)) {
 			return (true);
 		} else {
 			return (false);
