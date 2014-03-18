@@ -45,7 +45,7 @@ public class App implements Runnable {
 	    this.serverSocket = ssf.createSocket(serverAddress, serverPort);
 	    // The timeout is used here so that we don't block on read calls.
 	    // it is critical since the application normally stalls on these BufferedInputStream.read().
-	    this.serverSocket.setSoTimeout(100);
+	    this.serverSocket.setSoTimeout(200);
 //	    this.serverSocket = new Socket(serverAddress, serverPort);
 		
 		bufferedInputStream = new BufferedInputStream(serverSocket.getInputStream());
