@@ -33,7 +33,7 @@ public class App implements Runnable {
 	private AppState currentState;
 	private AppUserPollingState userPolling;
 	private AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
-	private AppState appCheckMessagesState, appSendMessageState;
+	private AppState appCheckMessagesState, appSendMessageState, appSendFileState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
 //		// Sets the system variable required to handle the Truststore.
@@ -77,6 +77,7 @@ public class App implements Runnable {
 		deleteState = new AppDeleteState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 		appCheckMessagesState = new AppCheckMessagesState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 		appSendMessageState = new AppSendMessageState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		appSendFileState = new AppSendFileState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 	}
 
 	/**
@@ -122,6 +123,9 @@ public class App implements Runnable {
 			break;
 		case SEND_MESSAGE:
 			this.currentState = this.appSendMessageState;
+			break;
+		case SEND_FILE:
+			this.currentState = this.appSendFileState;
 			break;
 		default:
 			this.currentState = this.mainState;

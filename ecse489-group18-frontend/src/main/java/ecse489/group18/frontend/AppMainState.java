@@ -38,8 +38,9 @@ public class AppMainState extends AppState {
 		System.out.println("4 - Delete an account");
 		System.out.println("5 - Send echo message to server");
 		System.out.println("6 - Send a message to a user");
-		System.out.println("7 - Check current messages");
-		System.out.println("8 - Exit");
+		System.out.println("7 - Send a file to a user");
+		System.out.println("8 - Check current messages");
+		System.out.println("9 - Exit");
 		System.out.print("Enter an option: ");
 	}
 

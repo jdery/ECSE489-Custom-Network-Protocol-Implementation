@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
 public class Helpers {
 
 	private static final String COMMA_REGEX = ".*[,].*";
+	private static final String JPEG_REGEX = ".*[.][jJ][pP][eE][gG]";
+	private static final String PNG_REGEX = ".*[.][pP][nN][gG]";
+	private static final String ZIP_REGEX = ".*[.][zZ][iI][pP]";
 	
 	/**
 	 * Prints a header on the terminal.
@@ -17,7 +20,7 @@ public class Helpers {
 	 * @param header
 	 *            The header to be printed.
 	 */
-	protected static void printHeader(String header) {
+	public static void printHeader(String header) {
 		int lengthOfHeader = header.length() + 4;
 
 		System.out.print("+");
@@ -42,7 +45,7 @@ public class Helpers {
 	 *            The credential (either password or username) to be validated.
 	 * @return True if valid and false otherwise.
 	 */
-	protected static boolean validateCredentials(String username, String password) {
+	public static boolean validateCredentials(String username, String password) {
 		if (!validateCredential(username) || !validateCredential(password)) {
 			return (false);
 		}
@@ -56,7 +59,7 @@ public class Helpers {
 	 *            The credentials to be validated.
 	 * @return True if valid and false otherwise.
 	 */
-	protected static boolean validateCredential(String credential) {
+	public static boolean validateCredential(String credential) {
 		if (credential == null || credential.length() == 0) {
 			return (false);
 		}
@@ -64,5 +67,19 @@ public class Helpers {
 			return (false);
 		}
 		return (true);
+	}
+	
+	/**
+	 * Validates the supported file extension.
+	 * 
+	 * @param extension The file path to verify.
+	 * @return True if valid and false otherwise.
+	 */
+	public static boolean validateFileExtention(String extension) {
+		if (Pattern.matches(JPEG_REGEX, extension) || Pattern.matches(PNG_REGEX, extension) || Pattern.matches(ZIP_REGEX, extension)) {
+			return (true);
+		} else {
+			return (false);
+		}
 	}
 }

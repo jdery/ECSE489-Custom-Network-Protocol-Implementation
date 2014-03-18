@@ -17,7 +17,8 @@ public enum MessageType {
 	DELETE_USER,
 	CREATE_STORE,
 	SEND_MESSAGE_TO_USER,
-	QUERY_MESSAGES;
+	QUERY_MESSAGES,
+	SEND_FILE;
 	
 	/**
 	 * 
