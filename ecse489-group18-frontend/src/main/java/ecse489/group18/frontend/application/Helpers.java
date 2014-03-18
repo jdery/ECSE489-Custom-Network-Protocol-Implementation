@@ -70,14 +70,30 @@ public class Helpers {
 		return (true);
 	}
 	
+	public static boolean isJPEG(String filePath) {
+		return (Pattern.matches(JPEG_REGEX, filePath));
+	}
+	
+	public static boolean isPNG(String filePath) {
+		return (Pattern.matches(PNG_REGEX, filePath));
+	}
+	
+	public static boolean isZIP(String filePath) {
+		return (Pattern.matches(ZIP_REGEX, filePath));
+	}
+	
+	public static boolean isTXT(String filePath) {
+		return (Pattern.matches(TXT_REGEX, filePath));
+	}
+	
 	/**
 	 * Validates the supported file extension.
 	 * 
 	 * @param extension The file path to verify.
 	 * @return True if valid and false otherwise.
 	 */
-	public static boolean validateFileExtention(String extension) {
-		if (Pattern.matches(JPEG_REGEX, extension) || Pattern.matches(PNG_REGEX, extension) || Pattern.matches(ZIP_REGEX, extension) || Pattern.matches(TXT_REGEX, extension)) {
+	public static boolean validateFileExtention(String filePath) {
+		if (isJPEG(filePath) || isPNG(filePath) || isTXT(filePath) || isZIP(filePath)) {
 			return (true);
 		} else {
 			return (false);

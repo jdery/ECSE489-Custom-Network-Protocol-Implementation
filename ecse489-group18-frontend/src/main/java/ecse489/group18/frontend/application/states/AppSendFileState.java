@@ -9,6 +9,7 @@ import java.io.OutputStream;
 
 import ecse489.group18.frontend.application.App;
 import ecse489.group18.frontend.application.Helpers;
+import ecse489.group18.frontend.messages.*;
 
 /**
  * @author Jean-Sebastien Dery
@@ -73,9 +74,10 @@ public class AppSendFileState extends AppState {
 			}
 			
 			String[] pathDivisions = filePath.split(File.separator);
+			String fileName = pathDivisions[pathDivisions.length-1];
 			
 			System.out.println("\nSize of file: " + sizeOfFile + "byte(s)");
-			System.out.println("\nName of file: " + pathDivisions[pathDivisions.length-1]);
+			System.out.println("\nName of file: " + fileName);
 			
 			FileInputStream br = new FileInputStream(filePath);
 			byte[] fileContent = new byte[sizeOfFile];
@@ -83,6 +85,11 @@ public class AppSendFileState extends AppState {
 			System.out.println("The file has been loaded in memory.");
 			
 			// TODO: the extension will be included in the message Sub-Type.
+			int messageSubType = Message.giveSubTypesBasedOnFileExtension(fileName);
+			
+			Message messageToSend = new Message(MessageType.SEND_FILE, messageSubType, fileContent);
+			
+			this.sendMessage(messageToSend);
 			
 			this.pressEnterToContinue();
 			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);

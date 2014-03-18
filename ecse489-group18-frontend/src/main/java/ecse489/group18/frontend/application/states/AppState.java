@@ -165,7 +165,7 @@ public abstract class AppState {
 			case 0:
 				System.out.println("You were successfully authenticated!");
 				this.backPointerApp.setIsUserLoggedIn(true);
-				this.backPointerApp.startPollingMessages();
+//				this.backPointerApp.startPollingMessages();// FIXME: uncomment this
 				return (true);
 			case 1:
 				System.out.println("You are already logged in!");

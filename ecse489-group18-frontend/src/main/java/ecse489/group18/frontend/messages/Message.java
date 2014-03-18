@@ -1,6 +1,9 @@
 package ecse489.group18.frontend.messages;
 
 import java.nio.ByteBuffer;
+import java.util.NoSuchElementException;
+
+import ecse489.group18.frontend.application.Helpers;
 
 /**
  * The custom protocol message.
@@ -26,6 +29,11 @@ public class Message {
 	 * The payload of the message.
 	 */
 	private String messageData;
+	
+	/**
+	 * The payload raw data used when we send files to the server.
+	 */
+	private byte[] rawData;
 
 	/**
 	 * Factory for the messages.
@@ -34,7 +42,7 @@ public class Message {
 	 *            The type of message to be instantiated.
 	 * @return The instantiated message.
 	 */
-	static public Message MessageFactory(DefaultMessages defaultMessage) {
+	public static Message MessageFactory(DefaultMessages defaultMessage) {
 		switch (defaultMessage) {
 		case EXIT:
 			return (new Message(MessageType.EXIT, 0, "EXIT"));
@@ -52,12 +60,42 @@ public class Message {
 
 		return (null);
 	}
+	
+	/**
+	 * Determines what is the Message Sub-Type based on the extension of the file.
+	 * 
+	 * @param filePath The file path to analyze.
+	 * @return The corresponding Message Sub-Type value.
+	 * @throws NoSuchElementException
+	 */
+	public static int giveSubTypesBasedOnFileExtension(String filePath) throws NoSuchElementException {
+		if (Helpers.isJPEG(filePath)) {
+			return (0);
+		} else if (Helpers.isPNG(filePath)) {
+			return (1);
+		} else if (Helpers.isTXT(filePath)) {
+			return (2);
+		} else if (Helpers.isZIP(filePath)) {
+			return (3);
+		} else {
+			throw new NoSuchElementException("The extension you entered is not supported.");
+		}
+	}
 
 	public Message(MessageType messageType, int subMessageType, String messageData) {
 		this.messageType = messageType;
 		this.subMessageType = subMessageType;
 		this.messageData = messageData;
+		this.rawData = null;
 		this.size = messageData.length();
+	}
+	
+	public Message(MessageType messageType, int subMessageType, byte[] rawData) {
+		this.messageType = messageType;
+		this.subMessageType = subMessageType;
+		this.messageData = null;
+		this.rawData = rawData;
+		this.size = rawData.length;
 	}
 
 	/**
@@ -69,7 +107,12 @@ public class Message {
 		byte[] messageType = ByteBuffer.allocate(4).putInt(this.messageType.getValue()).array();
 		byte[] subMessageType = ByteBuffer.allocate(4).putInt(this.subMessageType).array();
 		byte[] size = ByteBuffer.allocate(4).putInt(this.size).array();
-		byte[] messageData = this.messageData.getBytes();
+		byte[] messageData;
+		if (this.messageData != null) {
+			messageData = this.messageData.getBytes();
+		} else {
+			messageData = this.rawData;
+		}
 
 		byte[] arrayToBeReturned = new byte[messageType.length + subMessageType.length + size.length + messageData.length];
 		System.arraycopy(messageType, 0, arrayToBeReturned, 0, messageType.length);
