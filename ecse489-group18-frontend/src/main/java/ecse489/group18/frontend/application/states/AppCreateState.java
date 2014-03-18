@@ -1,11 +1,17 @@
 /**
  * 
  */
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.application.states;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.OutputStream;
+
+import ecse489.group18.frontend.application.App;
+import ecse489.group18.frontend.application.Helpers;
+import ecse489.group18.frontend.messages.DefaultMessages;
+import ecse489.group18.frontend.messages.Message;
+import ecse489.group18.frontend.messages.MessageType;
 
 /**
  * @author Jean-Sebastien Dery

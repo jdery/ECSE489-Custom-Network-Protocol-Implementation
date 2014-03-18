@@ -1,4 +1,4 @@
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.application;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -7,12 +7,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+
+import ecse489.group18.frontend.application.states.AppCheckMessagesState;
+import ecse489.group18.frontend.application.states.AppCreateState;
+import ecse489.group18.frontend.application.states.AppDeleteState;
+import ecse489.group18.frontend.application.states.AppEchoState;
+import ecse489.group18.frontend.application.states.AppExitState;
+import ecse489.group18.frontend.application.states.AppLoginState;
+import ecse489.group18.frontend.application.states.AppLogoutState;
+import ecse489.group18.frontend.application.states.AppMainState;
+import ecse489.group18.frontend.application.states.AppSendFileState;
+import ecse489.group18.frontend.application.states.AppSendMessageState;
+import ecse489.group18.frontend.application.states.AppState;
+import ecse489.group18.frontend.application.states.AppStates;
+import ecse489.group18.frontend.application.states.AppUserPollingState;
 
 /**
  * @author Jean-Sebastien Dery

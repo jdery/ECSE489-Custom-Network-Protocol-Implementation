@@ -1,4 +1,4 @@
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.application.states;
 
 import java.util.NoSuchElementException;
 

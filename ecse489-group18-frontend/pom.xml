@@ -53,7 +53,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ecse489.group18.frontend.Client</mainClass>
+							<mainClass>ecse489.group18.frontend.application.Client</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

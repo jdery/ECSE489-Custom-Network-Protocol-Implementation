@@ -1,4 +1,4 @@
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.messages;
 
 import java.nio.ByteBuffer;
 

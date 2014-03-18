@@ -1,4 +1,4 @@
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.application.states;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import ecse489.group18.frontend.application.App;
+import ecse489.group18.frontend.application.Helpers;
 
 /**
  * @author Jean-Sebastien Dery
@@ -42,7 +45,7 @@ public class AppSendFileState extends AppState {
 			from = bufferedReader.readLine();
 			System.out.print("Destination user: ");
 			destination = bufferedReader.readLine();
-			System.out.println("The file you want to transfer must be of the following extention: '.jpeg', '.png', '.zip'.");
+			System.out.println("The file you want to transfer must be of the following extention: '.jpeg', '.png', '.zip', '.txt'.");
 			System.out.println("The path you will enter will be from the place the application is being executed.");
 			System.out.print("File to transfer: ");
 			filePath = bufferedReader.readLine();
@@ -77,6 +80,7 @@ public class AppSendFileState extends AppState {
 			FileInputStream br = new FileInputStream(filePath);
 			byte[] fileContent = new byte[sizeOfFile];
 			br.read(fileContent, 0, sizeOfFile);
+			System.out.println("The file has been loaded in memory.");
 			
 			// TODO: the extension will be included in the message Sub-Type.
 			

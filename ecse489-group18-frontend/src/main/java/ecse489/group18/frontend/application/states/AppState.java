@@ -1,4 +1,4 @@
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.application.states;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -7,6 +7,10 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Vector;
+
+import ecse489.group18.frontend.application.App;
+import ecse489.group18.frontend.messages.Message;
+import ecse489.group18.frontend.messages.MessageType;
 
 /**
  * @author Jean-Sebastien Dery

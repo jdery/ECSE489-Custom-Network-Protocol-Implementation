@@ -1,4 +1,4 @@
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.application;
 
 
 /**
@@ -14,20 +14,25 @@ public class Client {
 	/**
 	 * The server's address.
 	 */
-//	public static String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
 	public static String SERVER_ADDRESS = "localhost";
 
 	public static void main(String[] args) {
-//		// Verifies that the number of arguments are correct and if not displays a message.
-//		int numberOfArguments = args.length;
-//		if (numberOfArguments != 0 && numberOfArguments != 1 && numberOfArguments != 3) {
-//			System.err.println("You did not entered the proper amount of arguments!");
-//			System.out.println("How to use this ");
-//		}
-
 		App myApp;
 		
 		try {
+			// Verifies that the number of arguments are correct and if not displays a message.
+			int numberOfArguments = args.length;
+			if (numberOfArguments != 0 && numberOfArguments != 2) {
+				System.err.println("You did not entered the proper amount of arguments!");
+				System.out.println("How to use this :");
+				System.out.println("If you enter no arguments, the IP='" + SERVER_ADDRESS + "' and port='" + SERVER_PORT + "'");
+				System.out.println("If you enter two arguments, the IP first and then the port number.");
+				return;
+			} else if (numberOfArguments == 2) {
+				SERVER_ADDRESS = args[0];
+				SERVER_PORT = Integer.parseInt(args[1]);
+			}
+			
 			System.out.println("Enabling the connection with the server...");
 			myApp = new App(SERVER_ADDRESS, SERVER_PORT);
 		} catch (Exception e) {

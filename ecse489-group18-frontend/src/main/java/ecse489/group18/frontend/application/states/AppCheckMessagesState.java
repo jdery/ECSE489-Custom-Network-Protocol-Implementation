@@ -1,12 +1,15 @@
 /**
  * 
  */
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.application.states;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import ecse489.group18.frontend.application.App;
+import ecse489.group18.frontend.application.Helpers;
 
 /**
  * @author Jean-Sebastien Dery

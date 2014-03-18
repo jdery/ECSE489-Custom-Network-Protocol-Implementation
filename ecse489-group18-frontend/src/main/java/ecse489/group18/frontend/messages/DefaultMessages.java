@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ecse489.group18.frontend;
+package ecse489.group18.frontend.messages;
 
 /**
  * The default messages to be used in the Message's factory.
