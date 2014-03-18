@@ -53,8 +53,7 @@ public class Message {
 		return (null);
 	}
 
-	public Message(MessageType messageType, int subMessageType,
-			String messageData) {
+	public Message(MessageType messageType, int subMessageType, String messageData) {
 		this.messageType = messageType;
 		this.subMessageType = subMessageType;
 		this.messageData = messageData;

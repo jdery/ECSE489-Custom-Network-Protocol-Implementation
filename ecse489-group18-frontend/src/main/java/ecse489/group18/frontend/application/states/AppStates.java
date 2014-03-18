@@ -33,6 +33,12 @@ public enum AppStates {
 		return (this.value);
 	}
 	
+	/**
+	 * Returns the AppStates enum instantiation based on the integer value.
+	 * 
+	 * @param value The integer value to consider.
+	 * @return The instantiated AppStates enum.
+	 */
 	public static AppStates getEnum(int value) {
 		for (AppStates currentEnum : AppStates.values()) {
 			if (currentEnum.getValue() == value) {
