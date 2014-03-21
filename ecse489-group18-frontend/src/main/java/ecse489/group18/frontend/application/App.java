@@ -87,8 +87,11 @@ public class App implements Runnable {
 	 * Will set the state of the application to when the user is logged in.
 	 * 
 	 * @param username The logged in user.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public void setUserToLoggedIn(String username) {
+	public void setUserToLoggedIn(String username) throws UnknownHostException, IOException {
+		this.startPollingMessages();
 		this.isUserLoggedIn = true;
 		this.loggedUsername = username;
 	}
@@ -97,6 +100,7 @@ public class App implements Runnable {
 	 * Will ensure that the user is logged out for the application.
 	 */
 	public void setUserToLoggedOut() {
+		this.stopPollingMessages();
 		this.isUserLoggedIn = false;
 		this.loggedUsername = null;
 	}
@@ -174,7 +178,7 @@ public class App implements Runnable {
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public void startPollingMessages() throws UnknownHostException, IOException {
+	private void startPollingMessages() throws UnknownHostException, IOException {
 		this.userPolling = new AppUserPollingState(this, this.bufferedInputStream, this.socketOutputStream, bufferedReader);
 		pollingThread = new Thread(this.userPolling);
 		pollingThread.start();
@@ -183,7 +187,7 @@ public class App implements Runnable {
 	/**
 	 * Will stop polling messages for the current user.
 	 */
-	public void stopPollingMessages() {
+	private void stopPollingMessages() {
 		// This lock will let the polling thread complete a full cycle (which includes reading the BufferedInputReader for a response).
 		synchronized(App.LOCK) {
 			if (this.userPolling != null) {

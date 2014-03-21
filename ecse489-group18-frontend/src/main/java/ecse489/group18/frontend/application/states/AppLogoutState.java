@@ -42,7 +42,6 @@ public class AppLogoutState extends AppState {
 				return;
 			}
 
-			this.backPointerApp.stopPollingMessages();
 			this.backPointerApp.setUserToLoggedOut();
 			
 			Vector<Message> messages;

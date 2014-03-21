@@ -37,7 +37,7 @@ public class AppExitState extends AppState {
 			synchronized(App.LOCK) {
 				this.sendMessage(Message.MessageFactory(DefaultMessages.EXIT));
 			}
-			this.backPointerApp.stopPollingMessages();
+			this.backPointerApp.setUserToLoggedOut();
 			System.out.println("The connection with the server was closed.");
 			this.pressEnterToContinue();
 			System.exit(0);
