@@ -144,6 +144,14 @@ public abstract class AppState {
 	}
 	
 	/**
+	 * Will wait for user input and set the next state to be the main menu.
+	 * @throws IOException 
+	 */
+	protected void switchToMainMenu() throws IOException {
+		this.pressEnterToContinue();
+		this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
+	}
+	/**
 	 * Sends the login request and handle the response.
 	 * 
 	 * @param username

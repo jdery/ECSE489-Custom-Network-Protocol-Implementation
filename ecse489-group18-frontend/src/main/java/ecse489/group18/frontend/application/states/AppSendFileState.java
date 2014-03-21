@@ -64,6 +64,8 @@ public class AppSendFileState extends AppState {
 			
 			if (!Helpers.validateCredential(fileName)) {
 				System.out.println("The file name is not valid, pleaser make sure you only use valid characters and that it contains less than " + Helpers.USERNAME_MAXIMUM_SIZE + " character(s).");
+				this.switchToMainMenu();
+				return;
 			}
 			
 			File fileToSend = new File(filePath);
@@ -71,13 +73,11 @@ public class AppSendFileState extends AppState {
 			
 			if (sizeOfFile > 50000) {
 				System.out.println("The file you selected is too big! It must be less than 50,000 bytes!");
-				this.pressEnterToContinue();
-				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
+				this.switchToMainMenu();
 				return;
 			} else if (sizeOfFile == 0) {
 				System.out.println("The file you selected contains nothing! It must be more than 0 byte!");
-				this.pressEnterToContinue();
-				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
+				this.switchToMainMenu();
 				return;
 			}
 			
