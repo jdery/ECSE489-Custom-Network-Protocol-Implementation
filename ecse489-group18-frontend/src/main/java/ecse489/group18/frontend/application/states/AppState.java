@@ -173,7 +173,7 @@ public abstract class AppState {
 			switch(responseFromServer.getSubMessageType()) {
 			case 0:
 				System.out.println("You were successfully authenticated!");
-				this.backPointerApp.setIsUserLoggedIn(true);
+				this.backPointerApp.setUserToLoggedIn(username);
 				this.backPointerApp.startPollingMessages();
 				return (true);
 			case 1:

@@ -43,7 +43,7 @@ public class AppLogoutState extends AppState {
 			}
 
 			this.backPointerApp.stopPollingMessages();
-			this.backPointerApp.setIsUserLoggedIn(false);
+			this.backPointerApp.setUserToLoggedOut();
 			
 			Vector<Message> messages;
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.

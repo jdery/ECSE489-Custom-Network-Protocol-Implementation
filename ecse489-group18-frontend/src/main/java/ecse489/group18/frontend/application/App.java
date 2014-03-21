@@ -39,6 +39,7 @@ public class App implements Runnable {
 	private Socket serverSocket;
 	private Thread pollingThread;
 	private boolean isUserLoggedIn = false;
+	private String loggedUsername = null;
 
 	private AppState currentState;
 	private AppUserPollingState userPolling;
@@ -46,7 +47,7 @@ public class App implements Runnable {
 	private AppState appCheckMessagesState, appSendMessageState, appSendFileState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
-//		// Sets the system variable required to handle the Truststore.
+		// Sets the system variable required to handle the Truststore.
 		System.setProperty("javax.net.ssl.trustStore", "cacerts.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "ThisIsOurPass123");
 		
@@ -66,12 +67,38 @@ public class App implements Runnable {
 		currentState = mainState;
 	}
 	
+	/**
+	 * 
+	 * @return Returns true if the user is logged in and false otherwise.
+	 */
 	public boolean isUserLoggedIn() {
 		return (this.isUserLoggedIn);
 	}
 	
-	public void setIsUserLoggedIn(boolean isUserLoggedIn) {
-		this.isUserLoggedIn = isUserLoggedIn;
+	/**
+	 * 
+	 * @return The username of the logged in user.
+	 */
+	public String getLoggedInUsername() {
+		return (this.loggedUsername);
+	}
+	
+	/**
+	 * Will set the state of the application to when the user is logged in.
+	 * 
+	 * @param username The logged in user.
+	 */
+	public void setUserToLoggedIn(String username) {
+		this.isUserLoggedIn = true;
+		this.loggedUsername = username;
+	}
+	
+	/**
+	 * Will ensure that the user is logged out for the application.
+	 */
+	public void setUserToLoggedOut() {
+		this.isUserLoggedIn = false;
+		this.loggedUsername = null;
 	}
 	
 	/**

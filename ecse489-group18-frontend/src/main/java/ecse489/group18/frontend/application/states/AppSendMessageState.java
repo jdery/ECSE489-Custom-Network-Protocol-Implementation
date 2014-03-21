@@ -44,8 +44,7 @@ public class AppSendMessageState extends AppState {
 			}			
 			
 			String destination, from;
-			System.out.print("From user: ");
-			from = bufferedReader.readLine();
+			from = this.backPointerApp.getLoggedInUsername();
 			System.out.print("Destination user: ");
 			destination = bufferedReader.readLine();
 			

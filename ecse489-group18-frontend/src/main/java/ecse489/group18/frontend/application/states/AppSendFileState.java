@@ -43,8 +43,7 @@ public class AppSendFileState extends AppState {
 			
 			// Takes the inputs from the user.
 			String destination, from, filePath;
-			System.out.print("From user: ");
-			from = bufferedReader.readLine();
+			from = this.backPointerApp.getLoggedInUsername();
 			System.out.print("Destination user: ");
 			destination = bufferedReader.readLine();
 			System.out.println("The file you want to transfer must be of the following extention: '.jpeg', '.png', '.zip', '.txt'.");
