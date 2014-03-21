@@ -80,6 +80,7 @@ public abstract class AppState {
 			tempInformation = Arrays.copyOfRange(allHeaders,8,12);
 			int size = ByteBuffer.wrap(tempInformation).getInt();
 			
+			// TODO: need to handle when the message is a file.
 			// Reads the Message Data.
 			byte[] messageDataChars = new byte[size];
 			this.bufferedInputStream.read(messageDataChars, 0, size);

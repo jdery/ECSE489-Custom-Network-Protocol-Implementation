@@ -41,6 +41,7 @@ public class AppSendFileState extends AppState {
 				return;
 			}	
 			
+			// Takes the inputs from the user.
 			String destination, from, filePath;
 			System.out.print("From user: ");
 			from = bufferedReader.readLine();
@@ -51,11 +52,18 @@ public class AppSendFileState extends AppState {
 			System.out.print("File to transfer: ");
 			filePath = bufferedReader.readLine();
 			
-			if (!Helpers.validateFileExtention(filePath)) {
+			if (!Helpers.isSupportedFileExtention(filePath)) {
 				System.out.println("This file extension is not supported!");
 				this.pressEnterToContinue();
 				this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 				return;
+			}
+			
+			String[] pathDivisions = filePath.split(File.separator);
+			String fileName = pathDivisions[pathDivisions.length-1];
+			
+			if (!Helpers.validateCredential(fileName)) {
+				System.out.println("The file name is not valid, pleaser make sure you only use valid characters and that it contains less than " + Helpers.USERNAME_MAXIMUM_SIZE + " character(s).");
 			}
 			
 			File fileToSend = new File(filePath);
@@ -73,15 +81,12 @@ public class AppSendFileState extends AppState {
 				return;
 			}
 			
-			String[] pathDivisions = filePath.split(File.separator);
-			String fileName = pathDivisions[pathDivisions.length-1];
-			
 			System.out.println("\nSize of file: " + sizeOfFile + "byte(s)");
 			System.out.println("\nName of file: " + fileName);
 			
-			FileInputStream br = new FileInputStream(filePath);
+			FileInputStream fileInputStream = new FileInputStream(filePath);
 			byte[] fileContent = new byte[sizeOfFile];
-			br.read(fileContent, 0, sizeOfFile);
+			fileInputStream.read(fileContent, 0, sizeOfFile);
 			System.out.println("The file has been loaded in memory.");
 			
 			// TODO: the extension will be included in the message Sub-Type.

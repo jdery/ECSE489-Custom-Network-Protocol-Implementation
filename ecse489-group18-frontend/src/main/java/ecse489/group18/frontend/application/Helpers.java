@@ -14,6 +14,7 @@ public class Helpers {
 	private static final String PNG_REGEX = ".*[.][pP][nN][gG]";
 	private static final String ZIP_REGEX = ".*[.][zZ][iI][pP]";
 	private static final String TXT_REGEX = ".*[.][tT][xX][tT]";
+	public static final int USERNAME_MAXIMUM_SIZE = 15;
 	
 	/**
 	 * Prints a header on the terminal.
@@ -61,10 +62,10 @@ public class Helpers {
 	 * @return True if valid and false otherwise.
 	 */
 	public static boolean validateCredential(String credential) {
-		if (credential == null || credential.length() == 0) {
-			return (false);
-		}
-		if (Pattern.matches(COMMA_REGEX, credential)) {
+		if (credential == null
+				|| credential.length() == 0
+				|| Pattern.matches(COMMA_REGEX, credential)
+				|| credential.length() > USERNAME_MAXIMUM_SIZE) {
 			return (false);
 		}
 		return (true);
@@ -87,12 +88,12 @@ public class Helpers {
 	}
 	
 	/**
-	 * Validates the supported file extension.
+	 * Validates if the file path has a supported file extension.
 	 * 
 	 * @param extension The file path to verify.
 	 * @return True if valid and false otherwise.
 	 */
-	public static boolean validateFileExtention(String filePath) {
+	public static boolean isSupportedFileExtention(String filePath) {
 		if (isJPEG(filePath) || isPNG(filePath) || isTXT(filePath) || isZIP(filePath)) {
 			return (true);
 		} else {

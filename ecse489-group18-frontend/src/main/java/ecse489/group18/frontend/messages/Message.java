@@ -33,7 +33,7 @@ public class Message {
 	/**
 	 * The payload raw data used when we send files to the server.
 	 */
-	private byte[] rawData;
+	private byte[] filePayloadRawData;
 
 	/**
 	 * Factory for the messages.
@@ -86,7 +86,7 @@ public class Message {
 		this.messageType = messageType;
 		this.subMessageType = subMessageType;
 		this.messageData = messageData;
-		this.rawData = null;
+		this.filePayloadRawData = null;
 		this.size = messageData.length();
 	}
 	
@@ -94,7 +94,7 @@ public class Message {
 		this.messageType = messageType;
 		this.subMessageType = subMessageType;
 		this.messageData = null;
-		this.rawData = rawData;
+		this.filePayloadRawData = rawData;
 		this.size = rawData.length;
 	}
 
@@ -107,11 +107,16 @@ public class Message {
 		byte[] messageType = ByteBuffer.allocate(4).putInt(this.messageType.getValue()).array();
 		byte[] subMessageType = ByteBuffer.allocate(4).putInt(this.subMessageType).array();
 		byte[] size = ByteBuffer.allocate(4).putInt(this.size).array();
+		
+		// This section was added for the situation in which we are sending a file to the server.
+		// The content would already be a byte array so it does not need to be converted.
 		byte[] messageData;
 		if (this.messageData != null) {
+			// If the payload is a message from the user.
 			messageData = this.messageData.getBytes();
 		} else {
-			messageData = this.rawData;
+			// If the payload is a file from the user.
+			messageData = this.filePayloadRawData;
 		}
 
 		byte[] arrayToBeReturned = new byte[messageType.length + subMessageType.length + size.length + messageData.length];
