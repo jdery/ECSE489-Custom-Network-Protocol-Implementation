@@ -142,6 +142,9 @@ public class AppUserPollForFilesState extends AppState implements Runnable {
 						// because 2 messages are received... first sending string message above, and second
 						// sending raw file data, we use i + 1 here
 						byte[] rawFile = responses.get(i + 1).getRawData();
+						
+						//debug
+						System.out.println("The size of rawFile is " + rawFile.length);
 
 						this.addFilename(filename);
 						this.addFilenameMessage(formattedMessage);

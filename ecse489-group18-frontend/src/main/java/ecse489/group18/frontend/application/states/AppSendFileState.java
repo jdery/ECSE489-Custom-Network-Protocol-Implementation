@@ -78,7 +78,7 @@ public class AppSendFileState extends AppState {
 			String[] pathDivisions = filePath.split(File.separator);
 			String fileName = pathDivisions[pathDivisions.length-1];
 			
-			System.out.println("\nSize of file: " + sizeOfFile + "byte(s)");
+			System.out.println("\nSize of file: " + sizeOfFile + " byte(s)");
 			System.out.println("\nName of file: " + fileName);
 			
 			FileInputStream br = new FileInputStream(filePath);
@@ -89,7 +89,7 @@ public class AppSendFileState extends AppState {
 			System.out.println("The file has been loaded in memory.");
 			
 			//debug
-			System.out.println(fileContent);
+			System.out.println("The length of fileContent is " + fileContent.length);
 			
 			// TODO: the extension will be included in the message Sub-Type. ?
 //			int messageSubType = Message.giveSubTypesBasedOnFileExtension(fileName);

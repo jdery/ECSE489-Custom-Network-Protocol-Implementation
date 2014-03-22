@@ -50,7 +50,10 @@ public abstract class AppState {
 	protected void sendMessage(Message messageToSend) throws IOException {
 		//debug
 		if (messageToSend.getMessageType() == MessageType.SEND_FILE) {
-			System.out.println(messageToSend.getRawData());
+			byte[] blah = messageToSend.getRawData();
+			if (blah != null) {
+				System.out.println("Before send: " + blah.length);
+			}
 		}
 		
 		this.socketOutputStream.write(messageToSend.toByteArray());

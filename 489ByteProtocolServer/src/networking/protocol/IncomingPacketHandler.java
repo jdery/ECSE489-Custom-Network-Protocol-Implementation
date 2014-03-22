@@ -418,7 +418,7 @@ public class IncomingPacketHandler {
 					byte[] payload = p.getPayload();
 					
 					// debug
-					System.out.println("\n\n" + payload + "\n\n");
+					System.out.println("\n\npayload.length is " + payload.length + "\n\n");
 					
 					boolean user_exists = resource.userFileTableExists(storeUsername);
 					if (user_exists) {

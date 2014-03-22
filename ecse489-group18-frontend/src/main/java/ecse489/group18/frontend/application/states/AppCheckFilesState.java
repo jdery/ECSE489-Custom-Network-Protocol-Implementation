@@ -61,6 +61,9 @@ public class AppCheckFilesState extends AppState {
 						String theFilename = this.backPointerApp.getFilenameFromPollingThread(_iUserInput);
 						byte[] theFile = this.backPointerApp.getFilenameFileFromPollingThread(_iUserInput);
 						
+						// debug
+						System.out.println(theFile);
+						
 						FileOutputStream out = new FileOutputStream(theFilename);
 						out.write(theFile);
 						out.flush();
