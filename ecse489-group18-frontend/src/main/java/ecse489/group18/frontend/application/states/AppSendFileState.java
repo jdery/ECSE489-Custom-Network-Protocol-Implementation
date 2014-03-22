@@ -51,6 +51,7 @@ public class AppSendFileState extends AppState {
 			System.out.print("File to transfer: ");
 			filePath = bufferedReader.readLine();
 			
+			// check for valid filename extension
 			if (!Helpers.validateFileExtention(filePath)) {
 				System.out.println("This file extension is not supported!");
 				this.pressEnterToContinue();
@@ -61,6 +62,7 @@ public class AppSendFileState extends AppState {
 			File fileToSend = new File(filePath);
 			int sizeOfFile = (int) fileToSend.length();
 			
+			// check for valid file size
 			if (sizeOfFile > 50000) {
 				System.out.println("The file you selected is too big! It must be less than 50,000 bytes!");
 				this.pressEnterToContinue();
@@ -82,18 +84,58 @@ public class AppSendFileState extends AppState {
 			FileInputStream br = new FileInputStream(filePath);
 			byte[] fileContent = new byte[sizeOfFile];
 			br.read(fileContent, 0, sizeOfFile);
+			br.close();
+			
 			System.out.println("The file has been loaded in memory.");
 			
-			// TODO: the extension will be included in the message Sub-Type.
-			int messageSubType = Message.giveSubTypesBasedOnFileExtension(fileName);
+			//debug
+			System.out.println(fileContent);
 			
-			Message messageToSend = new Message(MessageType.SEND_FILE, messageSubType, fileContent);
+			// TODO: the extension will be included in the message Sub-Type. ?
+//			int messageSubType = Message.giveSubTypesBasedOnFileExtension(fileName);
 			
-			this.sendMessage(messageToSend);
+			Message messageToSend_1 = new Message(MessageType.SEND_FILE, 0, destination + "," + fileName);
+			Message messageToSend_2 = new Message(MessageType.SEND_FILE, 0, fileContent);
+			
+			// Send first message
+			Message responseFromServer;
+			synchronized(App.LOCK) {
+				this.sendMessage(messageToSend_1);
+				responseFromServer = this.readResponseFromServer();
+			}
+			
+			// if valid response (intermediate state, indicating that username and filename have been stored)
+			if (responseFromServer.getMessageType() == MessageType.SEND_FILE &&
+				responseFromServer.getSubMessageType() == 5 /* intermediate state */
+			) {
+
+				// debug print
+				System.out.println(responseFromServer.getMessageData());
+				
+				// send message 2
+				synchronized(App.LOCK) {
+					this.sendMessage(messageToSend_2);
+					responseFromServer = this.readResponseFromServer();
+				}
+				
+				// check for success
+				if (responseFromServer.getMessageType() == MessageType.SEND_FILE &&
+					responseFromServer.getSubMessageType() == 0) {
+					System.out.println("Success!!!");
+				}
+				
+			} else {
+				// error
+				System.out.println("There has been an error");
+			}
+			// TODO: maybe here, wait for response and then send another message if success
+			// TODO: to save the filename in the database and call it
+			
+			System.out.println(responseFromServer.getMessageData());
 			
 			this.pressEnterToContinue();
 			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

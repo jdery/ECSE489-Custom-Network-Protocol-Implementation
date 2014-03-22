@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import ecse489.group18.frontend.application.states.AppCheckFilesState;
 import ecse489.group18.frontend.application.states.AppCheckMessagesState;
 import ecse489.group18.frontend.application.states.AppCreateState;
 import ecse489.group18.frontend.application.states.AppDeleteState;
@@ -22,6 +23,7 @@ import ecse489.group18.frontend.application.states.AppSendFileState;
 import ecse489.group18.frontend.application.states.AppSendMessageState;
 import ecse489.group18.frontend.application.states.AppState;
 import ecse489.group18.frontend.application.states.AppStates;
+import ecse489.group18.frontend.application.states.AppUserPollForFilesState;
 import ecse489.group18.frontend.application.states.AppUserPollingState;
 
 /**
@@ -38,12 +40,14 @@ public class App implements Runnable {
 	private BufferedReader bufferedReader;
 	private Socket serverSocket;
 	private Thread pollingThread;
+	private Thread pollForFilesThread;
 	private boolean isUserLoggedIn = false;
 
 	private AppState currentState;
 	private AppUserPollingState userPolling;
+	private AppUserPollForFilesState userPollForFiles;
 	private AppState loginState, mainState, echoState, exitState, createState, logoutState, deleteState;
-	private AppState appCheckMessagesState, appSendMessageState, appSendFileState;
+	private AppState appCheckMessagesState, appCheckFilesState, appSendMessageState, appSendFileState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
 //		// Sets the system variable required to handle the Truststore.
@@ -86,6 +90,7 @@ public class App implements Runnable {
 		logoutState = new AppLogoutState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 		deleteState = new AppDeleteState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 		appCheckMessagesState = new AppCheckMessagesState(this, bufferedInputStream, socketOutputStream, bufferedReader);
+		appCheckFilesState = new AppCheckFilesState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 		appSendMessageState = new AppSendMessageState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 		appSendFileState = new AppSendFileState(this, bufferedInputStream, socketOutputStream, bufferedReader);
 	}
@@ -131,6 +136,9 @@ public class App implements Runnable {
 		case CHECK_RECEIVED_MESSAGES:
 			this.currentState = this.appCheckMessagesState;
 			break;
+		case CHECK_FILES:
+			this.currentState = this.appCheckFilesState;
+			break;
 		case SEND_MESSAGE:
 			this.currentState = this.appSendMessageState;
 			break;
@@ -167,6 +175,30 @@ public class App implements Runnable {
 	}
 	
 	/**
+	 * Will start polling messages for the currently logged in user.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 */
+	public void startPollingFiles() throws UnknownHostException, IOException {
+		this.userPollForFiles = new AppUserPollForFilesState(this, this.bufferedInputStream, this.socketOutputStream, bufferedReader);
+		pollForFilesThread = new Thread(this.userPollForFiles);
+		pollForFilesThread.start();
+	}
+		
+	/**
+	 * Will stop polling messages for the current user.
+	 */
+	public void stopPollingFiles() {
+		// This lock will let the polling thread complete a full cycle (which includes reading the BufferedInputReader for a response).
+		synchronized(App.LOCK) {
+			if (this.userPollForFiles != null) {
+				this.pollForFilesThread.interrupt();
+				this.userPollForFiles = null;
+			}
+		}
+	}
+	
+	/**
 	 * Will get the messages from the polling thread.
 	 * 
 	 * @return The messages ready to be printed on the console.
@@ -177,5 +209,32 @@ public class App implements Runnable {
 		} else {
 			return (this.userPolling.getMessages());
 		}
+	}
+	
+	/**
+	 * Will get the messages from the polling thread.
+	 * 
+	 * @return The messages ready to be printed on the console.
+	 */
+	public String getFilenameMessagesFromPollingThread() {
+		if (this.userPollForFiles == null) {
+			return (null);
+		} else {
+			return (this.userPollForFiles.getFilenameMessages());
+		}
+	}
+	
+	public String getFilenameFromPollingThread(int index) {
+		if (this.userPollForFiles == null) {
+			return null;
+		}
+		return this.userPollForFiles.getFilenameForIndex(index);
+	}
+	
+	public byte[] getFilenameFileFromPollingThread(int index) {
+		if (this.userPollForFiles == null) {
+			return null;
+		}
+		return this.userPollForFiles.getFileForIndex(index);
 	}
 }

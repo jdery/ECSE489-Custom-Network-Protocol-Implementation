@@ -74,6 +74,11 @@ public class ClientProcessor extends Thread implements IAsyncClientWriter {
 
 			byte[] data = new byte[s];
 			rawIn.read(data, 0, s);
+			
+			// debug
+			if (ByteBuffer.wrap(hArray).getInt() == MessageType.SEND_FILE_TO_USER.getInt()) {
+				System.out.println("\n\n" + data + "\n\n");
+			}
 
 			return new UnformattedPacket(hArray, h2Array, sArray, data);
 //		} catch (InterruptedException ex) {

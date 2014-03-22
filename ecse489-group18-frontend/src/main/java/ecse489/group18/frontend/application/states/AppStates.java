@@ -16,8 +16,9 @@ public enum AppStates {
 	SEND_MESSAGE(6),
 	SEND_FILE(7),
 	CHECK_RECEIVED_MESSAGES(8),
-	EXIT_APPLICATION(9),
-	MAIN_MENU(10);
+	CHECK_FILES(9),
+	EXIT_APPLICATION(10),
+	MAIN_MENU(11);
 	
 	private int value;
 	

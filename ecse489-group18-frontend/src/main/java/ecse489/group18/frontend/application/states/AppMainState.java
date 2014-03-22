@@ -43,7 +43,8 @@ public class AppMainState extends AppState {
 		System.out.println("6 - Send a message to a user");
 		System.out.println("7 - Send a file to a user");
 		System.out.println("8 - Check current messages");
-		System.out.println("9 - Exit");
+		System.out.println("9 - Check files received");
+		System.out.println("10 - Exit");
 		System.out.print("Enter an option: ");
 	}
 
@@ -71,8 +72,8 @@ public class AppMainState extends AppState {
 	private boolean switchState(String nextState) {
 		try {
 			int nextStateValue = Integer.parseInt(nextState);
-			AppStates nexState = AppStates.getEnum(nextStateValue);
-			this.backPointerApp.changeCurrentState(nexState);
+			AppStates _nextState = AppStates.getEnum(nextStateValue);
+			this.backPointerApp.changeCurrentState(_nextState);
 		} catch(NumberFormatException e) {
 			System.out.println("You must enter an integer value!");
 			return (false);

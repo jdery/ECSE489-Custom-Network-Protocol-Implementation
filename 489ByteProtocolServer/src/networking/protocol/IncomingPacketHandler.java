@@ -4,6 +4,7 @@ import java.util.*;
 
 import database.IResource;
 import database.UserMessage;
+import database.UserFile;
 import networking.UnformattedPacket;
 import networking.auth.AuthenticationManager;
 import networking.auth.AuthenticationToken;
@@ -17,6 +18,12 @@ public class IncomingPacketHandler {
 	private IResource resource;
 	private AuthenticationManager auth_manager;
 	private IAsyncClientWriter asyncClientWriter;
+	
+/***** storage for multiple messages for sending files 	*****/
+	private boolean isSecondFileMessage = false;
+	private String storeUsername = "";
+	private String storeFilename = "";
+/***** 				end mutiple file storage 			*****/
 
 	private static final UnformattedPacket BAD_MESSAGE_RESPONSE = new UnformattedPacket(
 			MessageType.BADLY_FORMATTED_MESSAGE.getInt(),
@@ -97,6 +104,8 @@ public class IncomingPacketHandler {
 			String msg = "";
 
 			if (auth.authenticated()) {
+				
+				// display success for data store creation
 				boolean created = resource.createUserDataTable(auth.Username);
 				if (created) {
 					code = CreateStore.STORE_CREATED.getInt();
@@ -105,6 +114,7 @@ public class IncomingPacketHandler {
 					code = CreateStore.STORE_ALREADY_EXISTS.getInt();
 					msg = "The user's data store already exists";
 				}
+				
 			} else {
 				code = CreateStore.NOT_LOGGED_IN.getInt();
 				msg = "Must login first to create a user store";
@@ -113,6 +123,32 @@ public class IncomingPacketHandler {
 			return UnformattedPacket.CreateResponsePacket(
 					MessageType.CREATE_STORE.getInt(), code, msg);
 		}
+		
+		case CREATE_FILE_STORE: {
+			int code = CreateStore.STORE_ALREADY_EXISTS.getInt();
+			String msg = "";
+
+			if (auth.authenticated()) {
+				
+				// display success for file store creation
+				boolean created = resource.createUserFileTable(auth.Username);
+				if (created) {
+					code = CreateFileStore.STORE_CREATED.getInt();
+					msg = "User's file store created";
+				} else {
+					code = CreateFileStore.STORE_ALREADY_EXISTS.getInt();
+					msg = "The user's file store already exists";
+				}
+				
+			} else {
+				code = CreateFileStore.NOT_LOGGED_IN.getInt();
+				msg = "Must login first to create a user store";
+			}
+
+			return UnformattedPacket.CreateResponsePacket(
+					MessageType.CREATE_FILE_STORE.getInt(), code, msg);
+		}
+
 
 		case DELETE_USER: {
 			int code = UserDelete.ERROR.getInt();
@@ -210,6 +246,63 @@ public class IncomingPacketHandler {
 			return UnformattedPacket.CreateResponsePacket(
 					MessageType.QUERY_MESSAGES.getInt(), code, msg);
 		}
+		
+		case QUERY_FILES: {
+			int code = QueryFiles.NO_FILES.getInt();
+			String msg = "";
+
+			if (auth.authenticated()) {
+				UserFile[] files = resource.getNewUserFiles(auth.Username);
+				if (files.length > 0) {
+					int i = 0;
+					// This loop sends the first (n-1) messages over the wire before returning the
+					// last message in the queue to the processing thread 
+					for (; i < files.length - 1; i++) {
+						String msgtxt = files[i].format();
+						
+						UnformattedPacket up = UnformattedPacket
+								.CreateResponsePacket(
+										MessageType.QUERY_FILES.getInt(),
+										QueryFiles.FILES.getInt(), msgtxt);
+						asyncClientWriter.writePacket(up);
+						
+						UnformattedPacket up_2 = UnformattedPacket
+								.CreateResponsePacket(
+										MessageType.QUERY_FILES.getInt(),
+										QueryFiles.FILES.getInt(), files[i].getFileByteArray());
+						asyncClientWriter.writePacket(up_2);
+					}
+					
+					UserFile lastFile = files[i];
+					code = QueryFiles.FILES.getInt();
+					msg = lastFile.format();
+					
+					System.out.println("\n\n" + lastFile.getFileByteArray() + "\n\n");
+					
+					// send last message msgtxt and byte array pair
+					UnformattedPacket last_msg = UnformattedPacket
+							.CreateResponsePacket(
+									MessageType.QUERY_FILES.getInt(),
+									QueryFiles.FILES.getInt(), msg);
+					asyncClientWriter.writePacket(last_msg);
+					
+					return (UnformattedPacket.CreateResponsePacket(
+									MessageType.QUERY_FILES.getInt(),
+									QueryFiles.FILES.getInt(),
+									lastFile.getFileByteArray())
+							);
+					
+				} else {
+					code = QueryFiles.NO_FILES.getInt();
+					msg = "No files available";
+				}
+			} else {
+				code = QueryFiles.NOT_LOGGED_IN.getInt();
+				msg = "Must login first";
+			}
+			return UnformattedPacket.CreateResponsePacket(
+					MessageType.QUERY_FILES.getInt(), code, msg);
+		}
 
 		case LOGIN: {
 			int code = Login.BADLY_FORMATTED.getInt();
@@ -269,6 +362,99 @@ public class IncomingPacketHandler {
 			return UnformattedPacket.CreateResponsePacket(
 					MessageType.LOGOFF.getInt(), code, msg);
 		}
+		
+		case SEND_FILE_TO_USER: {
+			
+			int code = SendFileToUser.BADLY_FORMATTED.getInt();
+			String msg = "";
+			
+			// series of 3 messages to receive the file
+			if(!isSecondFileMessage) {
+				
+				// TODO: tokenize payload of first message
+				// TODO: do other stuff
+				
+				if (auth.authenticated()) {
+					String payload = p.payloadAsString();
+					StringTokenizer st = new StringTokenizer(payload, FIELD_TERMINATOR);
+					if (st.countTokens() >= 2) {
+						String _username = st.nextToken();
+						String _filename = getRemaining(payload, _username.length());
+						
+						// Check user existence
+						boolean user_exists = resource.userFileTableExists(_username);
+						if (user_exists) {
+							
+							code = SendFileToUser.INTERMEDIATE.getInt();
+							msg = "Intermediate state";
+							
+							// if valid, store username and filename in persistent storage while awaiting next message
+							storeUsername = _username;
+							storeFilename = _filename;
+							
+							System.out.println(storeUsername + ", " + storeFilename);
+							
+						} else {
+							code = SendFileToUser.USER_DOESNT_EXIST.getInt();
+							msg = "The specified user (or at least their file store) doesn't exist";
+						}
+					} else {
+						code = SendFileToUser.BADLY_FORMATTED.getInt();
+						msg = "Must have the format <username>,<filename> where neither may contain commas";
+					}
+				} else {
+					code = SendFileToUser.NOT_LOGGED_IN.getInt();
+					msg = "Musg login in order to send a file to another user";
+				}
+				
+				
+			} else { // if second in series of messages
+				
+				// TODO: get entire byte[] of file
+				// TODO: put message into db
+
+				if (auth.authenticated()) {
+					
+					byte[] payload = p.getPayload();
+					
+					// debug
+					System.out.println("\n\n" + payload + "\n\n");
+					
+					boolean user_exists = resource.userFileTableExists(storeUsername);
+					if (user_exists) {
+						boolean sent = resource.sendFileToUser(storeUsername, storeFilename, auth.Username, payload);
+						if (sent) {
+							code = SendFileToUser.FILE_SENT.getInt();
+							msg = "File sent";
+						} else {
+							code = SendFileToUser.FAILED_TO_WRITE_TO_USER_FILE_STORE.getInt();
+							msg = "Failed to write the message to the user store";
+						}
+					} else {
+						code = SendFileToUser.USER_DOESNT_EXIST.getInt();
+						msg = "The specified user (or at least their file store) doesn't exist";
+					}
+				} else {
+					code = SendFileToUser.NOT_LOGGED_IN.getInt();
+					msg = "Musg login in order to send a message to a user";
+				}
+				
+				// Clear temp storage for multiple messages 
+				storeUsername = "";
+				storeFilename = "";
+				isSecondFileMessage = !isSecondFileMessage;
+			}
+			
+			// only change state when in intermediate state
+			// changing back is handled regardless of whether the second time sends the file successfully or not
+			if (code == SendFileToUser.INTERMEDIATE.getInt()) {
+				isSecondFileMessage = !isSecondFileMessage;
+			}
+			
+			return UnformattedPacket.CreateResponsePacket(
+					MessageType.SEND_FILE_TO_USER.getInt(), code, msg);
+		}
+		
 		}
 		return BAD_MESSAGE_RESPONSE;
 	}

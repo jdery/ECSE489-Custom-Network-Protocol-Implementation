@@ -21,7 +21,7 @@ public abstract class AppState {
 
 	protected App backPointerApp;
 	private OutputStream socketOutputStream;
-	private BufferedInputStream bufferedInputStream;
+	protected BufferedInputStream bufferedInputStream;
 	protected BufferedReader bufferedReader;
 
 	/**
@@ -48,6 +48,11 @@ public abstract class AppState {
 	 * @throws IOException
 	 */
 	protected void sendMessage(Message messageToSend) throws IOException {
+		//debug
+		if (messageToSend.getMessageType() == MessageType.SEND_FILE) {
+			System.out.println(messageToSend.getRawData());
+		}
+		
 		this.socketOutputStream.write(messageToSend.toByteArray());
 	}
 	
@@ -56,7 +61,7 @@ public abstract class AppState {
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	private Message readMessage() throws InterruptedException, IOException {
+	protected Message readMessage() throws InterruptedException, IOException {
 		try {
 			byte[] tempInformation = new byte[4];
 			
@@ -64,7 +69,7 @@ public abstract class AppState {
 			byte[] allHeaders = new byte[12];
 			int bytesRead = 0;
 			while(bytesRead < 12) {
-			  bytesRead += bufferedInputStream.read(allHeaders, bytesRead, 12 - bytesRead);
+				bytesRead += bufferedInputStream.read(allHeaders, bytesRead, 12 - bytesRead);
 			}
 			
 			// Reads the MessageType.
@@ -166,6 +171,7 @@ public abstract class AppState {
 				System.out.println("You were successfully authenticated!");
 				this.backPointerApp.setIsUserLoggedIn(true);
 				this.backPointerApp.startPollingMessages();
+				this.backPointerApp.startPollingFiles();
 				return (true);
 			case 1:
 				System.out.println("You are already logged in!");

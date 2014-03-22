@@ -56,6 +56,7 @@ public class AppCreateState extends AppState {
 
 			if (this.createUserAccount(username, password)) {
 				this.createUserStore();
+				this.createFileStore();
 			}
 			
 			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
@@ -128,6 +129,37 @@ public class AppCreateState extends AppState {
 				break;
 			case 1:
 				System.out.println("The user store already exists!");
+				break;
+			case 2:
+				System.out.println("The user is not logged in!");
+				break;
+			}
+		} else {
+			System.out.println("An unexpected response was received: " + responseFromServer.toString());
+		}
+	}
+	
+	/**
+	 * Creates the file Store of the user.
+	 * 
+	 * @throws Exception
+	 */
+	private void createFileStore() throws Exception {
+		Message responseFromServer;
+		synchronized(App.LOCK) {
+			// Sends the message to create the user in the database.
+			this.sendMessage(Message.MessageFactory(DefaultMessages.CREATE_FILE_STORE));
+			responseFromServer = this.readResponseFromServer();
+		}
+
+		// Verify the response from the user.
+		if (responseFromServer.getMessageType() == MessageType.CREATE_FILE_STORE) {
+			switch (responseFromServer.getSubMessageType()) {
+			case 0:
+				System.out.println("The user's file store was created successfully!");
+				break;
+			case 1:
+				System.out.println("The user's file store already exists!");
 				break;
 			case 2:
 				System.out.println("The user is not logged in!");

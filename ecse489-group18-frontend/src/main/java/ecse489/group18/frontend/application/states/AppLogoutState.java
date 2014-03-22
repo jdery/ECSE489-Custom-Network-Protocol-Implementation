@@ -43,7 +43,11 @@ public class AppLogoutState extends AppState {
 			}
 
 			this.backPointerApp.stopPollingMessages();
+			this.backPointerApp.stopPollingFiles();
 			this.backPointerApp.setIsUserLoggedIn(false);
+			
+			// sleep so that polling threads have time to stop
+			Thread.sleep(200);
 			
 			Vector<Message> messages;
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.

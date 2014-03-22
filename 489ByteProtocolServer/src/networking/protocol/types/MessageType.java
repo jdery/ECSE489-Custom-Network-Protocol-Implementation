@@ -10,7 +10,10 @@ public enum MessageType {
 	DELETE_USER(6),
 	CREATE_STORE(7),
 	SEND_TO_USER(8), // <username>,message
-	QUERY_MESSAGES(9);
+	QUERY_MESSAGES(9),
+	SEND_FILE_TO_USER(10),
+	CREATE_FILE_STORE(11),
+	QUERY_FILES(12);
 	
 	private int i;
 	

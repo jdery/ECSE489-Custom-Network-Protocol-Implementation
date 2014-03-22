@@ -17,6 +17,8 @@ import ecse489.group18.frontend.messages.Message;
  */
 public class AppExitState extends AppState {
 
+	private final int SLEEPYTIME = 500;
+	
 	/**
 	 * @param backPointerApp
 	 * @param socketInputStream
@@ -33,11 +35,20 @@ public class AppExitState extends AppState {
 	public void execute() {
 		Helpers.printHeader("Exiting the application!");
 		try {
+			
+			this.backPointerApp.stopPollingMessages();
+			this.backPointerApp.stopPollingFiles();
+			
+			try { // give the polling threads time to stop
+				Thread.sleep(SLEEPYTIME);
+			} catch (Exception e) {
+				//do nothing
+			}
 			// This will ensure that only one thread at a time can send requests and retrieve the associated responses.
 			synchronized(App.LOCK) {
 				this.sendMessage(Message.MessageFactory(DefaultMessages.EXIT));
 			}
-			this.backPointerApp.stopPollingMessages();
+			
 			System.out.println("The connection with the server was closed.");
 			this.pressEnterToContinue();
 			System.exit(0);

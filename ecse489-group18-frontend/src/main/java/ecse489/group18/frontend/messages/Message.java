@@ -54,8 +54,12 @@ public class Message {
 			return (new Message(MessageType.DELETE_USER, 0, "DELETE_USER"));
 		case CREATE_STORE:
 			return (new Message(MessageType.CREATE_STORE, 0, "CREATE_STORE"));
+		case CREATE_FILE_STORE:
+			return (new Message(MessageType.CREATE_FILE_STORE, 0, "CREATE_FILE_STORE"));
 		case QUERY_MESSAGES:
 			return (new Message(MessageType.QUERY_MESSAGES, 0, "QUERY_MESSAGES"));
+		case QUERY_FILES:
+			return (new Message(MessageType.QUERY_FILES, 0, "QUERY_FILES"));
 		}
 
 		return (null);
@@ -112,6 +116,9 @@ public class Message {
 			messageData = this.messageData.getBytes();
 		} else {
 			messageData = this.rawData;
+			
+			//debug
+			System.out.println(messageData);
 		}
 
 		byte[] arrayToBeReturned = new byte[messageType.length + subMessageType.length + size.length + messageData.length];
@@ -145,6 +152,10 @@ public class Message {
 	 */
 	public String getMessageData() {
 		return (this.messageData);
+	}
+	
+	public byte[] getRawData() {
+		return (this.rawData);
 	}
 	
 	@Override
