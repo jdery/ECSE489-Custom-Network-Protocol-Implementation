@@ -224,7 +224,7 @@ public class App implements Runnable {
 		}
 	}
 	
-	public String getFilenameFromPollingThread(int index) {
+	public String getFilenameFromPollingThread(int index) throws IndexOutOfBoundsException {
 		if (this.userPollForFiles == null) {
 			return null;
 		}

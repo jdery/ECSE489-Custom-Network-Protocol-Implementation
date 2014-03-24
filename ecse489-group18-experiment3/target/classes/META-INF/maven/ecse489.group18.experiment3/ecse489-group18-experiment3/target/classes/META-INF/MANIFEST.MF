@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Built-By: Matthew
-Build-Jdk: 1.6.0_65
-Main-Class: ecse489.group18.experiment3.Client
-Created-By: Maven Integration for Eclipse
-

@@ -80,7 +80,7 @@ public class AppUserPollForFilesState extends AppState implements Runnable {
 		}
 	}
 	
-	public String getFilenameForIndex(int index) {
+	public String getFilenameForIndex(int index) throws IndexOutOfBoundsException {
 		return listOfFiles.get(index);
 	}
 	

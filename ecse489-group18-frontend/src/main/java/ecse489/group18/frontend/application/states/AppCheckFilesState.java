@@ -2,6 +2,7 @@ package ecse489.group18.frontend.application.states;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,50 +51,49 @@ public class AppCheckFilesState extends AppState {
 						String sUserInput = bufferedReader.readLine();
 						iUserInput = Integer.parseInt(sUserInput);
 						
-						// break if 0
-						if (iUserInput == 0) break;
+						// Leaves the menu if the user inputs 0 or an invalid number.
+						if (iUserInput == 0) {
+							this.pressEnterToContinue();
+							this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
+							break;
+						} else if (iUserInput < 0) {
+							throw new NumberFormatException();
+						}
 						
 						int _iUserInput = iUserInput;
 						
 						// subtract 1 here because arraylist indexing starts at 0, and this one starts at 1
 						_iUserInput--;
 						
-						String theFilename = this.backPointerApp.getFilenameFromPollingThread(_iUserInput);
-						byte[] theFile = this.backPointerApp.getFilenameFileFromPollingThread(_iUserInput);
+						this.writeFileToFileSystem(_iUserInput);
 						
-						// debug
-						System.out.println(theFile);
-						
-						FileOutputStream out = new FileOutputStream(theFilename);
-						out.write(theFile);
-						out.flush();
-						out.close();
-						
-						// debug
-						System.out.println("We have a file!");
-						
-						
+						System.out.println("The selected file was saved on your local file system.");
 					} catch (NumberFormatException e) {
-						System.out.println("You must enter an integer value");
+						System.out.println("You must enter a valid integer value!");
+					} catch (IndexOutOfBoundsException e) {
+						System.out.println("You must enter a valid integer value!");
 					}
 				} while (true);
-								
 			}
-			this.pressEnterToContinue();
-			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	/**
-	 * Displays "Press enter to continue" and waits for a carriage return.
-	 * @throws IOException 
+	 * Writes the file on the file system based on its position in the array list in which it is stored.
+	 * 
+	 * @param fileIndexInArrayList The position of the file in the array list.
+	 * @throws IOException
 	 */
-	protected void pressEnterToContinue() throws IOException {
-		System.out.println("\nPress enter to continue...");
-		bufferedReader.readLine();
+	private void writeFileToFileSystem(int fileIndexInArrayList) throws IOException, IndexOutOfBoundsException {
+		String theFilename = this.backPointerApp.getFilenameFromPollingThread(fileIndexInArrayList);
+		byte[] theFile = this.backPointerApp.getFilenameFileFromPollingThread(fileIndexInArrayList);
+		
+		// Writes the file to the local file system.
+		FileOutputStream out = new FileOutputStream(theFilename);
+		out.write(theFile);
+		out.flush();
+		out.close();
 	}
-
 }
