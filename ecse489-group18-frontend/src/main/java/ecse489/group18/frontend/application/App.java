@@ -42,7 +42,6 @@ public class App implements Runnable {
 	private Thread pollingThread;
 	private Thread pollForFilesThread;
 	private boolean isUserLoggedIn = false;
-	private String username = null;
 
 	private AppState currentState;
 	private AppUserPollingState userPolling;
@@ -80,21 +79,22 @@ public class App implements Runnable {
 	}
 	
 	/**
-	 * Will change the state of the app to when the user is logged in.
+	 * Will change the state of the App to when the user is logged in.
 	 * 
 	 * @param username The username of the user.
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public void setUserToLoggedIn(String username) throws UnknownHostException, IOException {
-		this.username = username;
+	public void setUserToLoggedIn() throws UnknownHostException, IOException {
 		this.isUserLoggedIn = true;
 		this.startPollingFiles();
 		this.startPollingMessages();
 	}
 	
+	/**
+	 * Will change the state of the App to when the user is logged out.
+	 */
 	public void setUserToLoggedOut() {
-		this.username = null;
 		this.isUserLoggedIn = false;
 		this.stopPollingFiles();
 		this.stopPollingMessages();

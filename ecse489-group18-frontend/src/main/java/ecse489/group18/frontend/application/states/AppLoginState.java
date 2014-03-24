@@ -41,11 +41,8 @@ public class AppLoginState extends AppState {
 				System.out.print("Password: ");
 				password = bufferedReader.readLine();
 			} while (!Helpers.validateCredentials(username, username));
-
-			if (this.loginUser(username, password)) {
-//				this.backPointerApp.setIsUserLoggedIn(true);
-//				this.backPointerApp.startPollingMessages();
-			}
+			
+			this.loginUser(username, password);
 			
 			this.backPointerApp.changeCurrentState(AppStates.MAIN_MENU);
 			this.pressEnterToContinue();

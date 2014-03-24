@@ -43,19 +43,17 @@ public class AppSendMessageState extends AppState {
 				return;
 			}			
 			
-			String destination, from;
-			System.out.print("From user: ");
-			from = bufferedReader.readLine();
+			String destination;
 			System.out.print("Destination user: ");
 			destination = bufferedReader.readLine();
 			
-			if (Helpers.validateCredentials(destination, from)) {
+			if (Helpers.validateCredential(destination)) {
 				System.out.print("Message to be sent: ");
 				String message = bufferedReader.readLine();
 				
 				Message responseFromServer;
 				synchronized(App.LOCK) {
-					this.sendMessage(new Message(MessageType.SEND_MESSAGE_TO_USER, 0, destination + "," + from + "@" + message));
+					this.sendMessage(new Message(MessageType.SEND_MESSAGE_TO_USER, 0, destination + "," + message));
 					responseFromServer = this.readResponseFromServer();
 				}
 				
