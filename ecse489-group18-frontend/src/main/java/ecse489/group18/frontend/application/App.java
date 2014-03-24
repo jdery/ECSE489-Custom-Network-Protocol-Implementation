@@ -42,6 +42,7 @@ public class App implements Runnable {
 	private Thread pollingThread;
 	private Thread pollForFilesThread;
 	private boolean isUserLoggedIn = false;
+	private String username = null;
 
 	private AppState currentState;
 	private AppUserPollingState userPolling;
@@ -70,12 +71,33 @@ public class App implements Runnable {
 		currentState = mainState;
 	}
 	
+	/**
+	 * 
+	 * @return True if a user is logged in and false otherwise.
+	 */
 	public boolean isUserLoggedIn() {
 		return (this.isUserLoggedIn);
 	}
 	
-	public void setIsUserLoggedIn(boolean isUserLoggedIn) {
-		this.isUserLoggedIn = isUserLoggedIn;
+	/**
+	 * Will change the state of the app to when the user is logged in.
+	 * 
+	 * @param username The username of the user.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 */
+	public void setUserToLoggedIn(String username) throws UnknownHostException, IOException {
+		this.username = username;
+		this.isUserLoggedIn = true;
+		this.startPollingFiles();
+		this.startPollingMessages();
+	}
+	
+	public void setUserToLoggedOut() {
+		this.username = null;
+		this.isUserLoggedIn = false;
+		this.stopPollingFiles();
+		this.stopPollingMessages();
 	}
 	
 	/**
@@ -155,7 +177,7 @@ public class App implements Runnable {
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public void startPollingMessages() throws UnknownHostException, IOException {
+	private void startPollingMessages() throws UnknownHostException, IOException {
 		this.userPolling = new AppUserPollingState(this, this.bufferedInputStream, this.socketOutputStream, bufferedReader);
 		pollingThread = new Thread(this.userPolling);
 		pollingThread.start();
@@ -164,7 +186,7 @@ public class App implements Runnable {
 	/**
 	 * Will stop polling messages for the current user.
 	 */
-	public void stopPollingMessages() {
+	private void stopPollingMessages() {
 		// This lock will let the polling thread complete a full cycle (which includes reading the BufferedInputReader for a response).
 		synchronized(App.LOCK) {
 			if (this.userPolling != null) {
@@ -179,7 +201,7 @@ public class App implements Runnable {
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public void startPollingFiles() throws UnknownHostException, IOException {
+	private void startPollingFiles() throws UnknownHostException, IOException {
 		this.userPollForFiles = new AppUserPollForFilesState(this, this.bufferedInputStream, this.socketOutputStream, bufferedReader);
 		pollForFilesThread = new Thread(this.userPollForFiles);
 		pollForFilesThread.start();
@@ -188,7 +210,7 @@ public class App implements Runnable {
 	/**
 	 * Will stop polling messages for the current user.
 	 */
-	public void stopPollingFiles() {
+	private void stopPollingFiles() {
 		// This lock will let the polling thread complete a full cycle (which includes reading the BufferedInputReader for a response).
 		synchronized(App.LOCK) {
 			if (this.userPollForFiles != null) {

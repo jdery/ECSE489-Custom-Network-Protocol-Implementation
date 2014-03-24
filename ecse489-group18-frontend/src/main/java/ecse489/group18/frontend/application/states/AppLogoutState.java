@@ -42,9 +42,7 @@ public class AppLogoutState extends AppState {
 				return;
 			}
 
-			this.backPointerApp.stopPollingMessages();
-			this.backPointerApp.stopPollingFiles();
-			this.backPointerApp.setIsUserLoggedIn(false);
+			this.backPointerApp.setUserToLoggedOut();
 			
 			// sleep so that polling threads have time to stop
 			Thread.sleep(200);

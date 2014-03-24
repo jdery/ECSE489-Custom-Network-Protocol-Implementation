@@ -54,9 +54,7 @@ public class AppDeleteState extends AppState {
 					switch(responseFromServer.getSubMessageType()) {
 					case 0:
 						System.out.println("The user was successfully deleted!");
-						this.backPointerApp.setIsUserLoggedIn(false);
-						this.backPointerApp.stopPollingMessages();
-						this.backPointerApp.stopPollingFiles();
+						this.backPointerApp.setUserToLoggedOut();
 						
 						// sleep so polling threads have time to stop
 						Thread.sleep(200);

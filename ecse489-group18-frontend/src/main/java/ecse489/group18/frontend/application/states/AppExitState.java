@@ -36,8 +36,7 @@ public class AppExitState extends AppState {
 		Helpers.printHeader("Exiting the application!");
 		try {
 			
-			this.backPointerApp.stopPollingMessages();
-			this.backPointerApp.stopPollingFiles();
+			this.backPointerApp.setUserToLoggedOut();
 			
 			try { // give the polling threads time to stop
 				Thread.sleep(SLEEPYTIME);
