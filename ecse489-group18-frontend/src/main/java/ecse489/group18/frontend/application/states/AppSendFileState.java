@@ -26,7 +26,6 @@ public class AppSendFileState extends AppState {
 	 */
 	public AppSendFileState(App backPointerApp, BufferedInputStream bufferedInputStream, OutputStream socketOutputStream, BufferedReader bufferedReader) {
 		super(backPointerApp, bufferedInputStream, socketOutputStream, bufferedReader);
-		
 	}
 
 	@Override

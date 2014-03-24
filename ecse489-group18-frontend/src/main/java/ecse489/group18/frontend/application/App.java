@@ -50,7 +50,7 @@ public class App implements Runnable {
 	private AppState appCheckMessagesState, appCheckFilesState, appSendMessageState, appSendFileState;
 
 	public App(String serverAddress, int serverPort) throws Exception {
-//		// Sets the system variable required to handle the Truststore.
+//		// Sets the system variable required to handle the certificate.
 		System.setProperty("javax.net.ssl.trustStore", "cacerts.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "ThisIsOurPass123");
 		
