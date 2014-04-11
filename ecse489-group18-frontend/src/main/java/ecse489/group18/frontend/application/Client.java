@@ -15,6 +15,7 @@ public class Client {
 	 * The server's address.
 	 */
 	public static String SERVER_ADDRESS = "localhost";
+//	public static String SERVER_ADDRESS = "142.157.149.37";
 //	public static String SERVER_ADDRESS = "dsp2014.ece.mcgill.ca";
 
 	public static void main(String[] args) {
